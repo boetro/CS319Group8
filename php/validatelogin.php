@@ -1,29 +1,27 @@
 <?php
 include 'user.php';
+include 'connect.php';
 
+$socket = new Connect();
+$con = $socket->getConnection();
 
-$username = mysql_real_escape_string($_POST["username"]);
-$password = mysql_real_escape_string($_POST["password"]);
+$username = $_POST["username"];
+$password = $_POST["password"];
 
-
-
-$con = mysqli_connect("mysql.cs.iastate.edu", "u31908", "CBWUTehhG", "db31908");
-
-if (mysqli_connect_errno($con))
-{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+$selectAll = $con->prepare("SELECT * FROM player WHERE gamertag = :username LIMIT 1");
+if(!$selectAll->execute(array(':username' => $username))) {
+	echo "Error selecting: ";
+	print_r($selectAll->errorInfo());
+	die();
 }
 
-$results = mysqli_query($con, "SELECT * FROM player WHERE gamertag = '".$username."';");
-if(!$results){
-	echo mysqli_error($con);
-}
+$results = $selectAll->fetchAll();
 
-if(mysqli_num_rows($results) == 0){
+if(count($results) <= 0) {
+ 	echo 'didnt return from databse';
  	header('Location: ../login.html');
-}else{
-
-	$row = mysqli_fetch_assoc($results);
+} else{
+	$row = $results[0];
 	if(User::verifyPass($row['pass_hash'], $password, $username)){
 		header('Location: ../main.html');
 	}else{
