@@ -3,7 +3,8 @@
   require('connect.php');
   require('board.php');
   
-  $testing = new Board();
+  $testPlayers = array();
+  $testing = new Board($testPlayers);
   $serialized = serialize($testing);
   
   echo 'serialized : ' . $serialized;
