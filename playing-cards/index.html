@@ -45,25 +45,25 @@
 				<button type="button" class="btn btn-primary" id="shuffleDraw">Shuffle, then draw</button>
 			</div>
 		</div>
-		<div class="row" style="background-color: mistyrose;">
+		<div class="row" style="background-color:mistyrose;">
 			<div class="col-md-12">
-				<h2>Card Deck</h2>
-				<div id="cardDeck"></div>
+				<h2>Game Board</h2>
+				<div id="gameBoard" style="width:800px;"></div>
 			</div>
 		</div>
-		<div class="row" style="background-color: paleturquoise;">
+		<div class="row" style="background-color:paleturquoise;">
 			<div class="col-md-12">
 				<h2>Your Hand</h2>
 				<div id="yourHand"></div>
 			</div>
 		</div>
-		<div class="row" style="background-color: mistyrose;">
+		<div class="row" style="background-color:mistyrose;">
 			<div class="col-md-12">
-				<h2>Enemy Hand</h2>
-				<div id="enemyHand"></div>
+				<h2>Card Deck</h2>
+				<div id="cardDeck" style="width:800px;"></div>
 			</div>
 		</div>
-		<div class="row" style="background-color: paleturquoise;">
+		<div class="row" style="background-color:paleturquoise;">
 			<div class="col-md-12">
 				<h2>Discard Pile</h2>
 				<div id="discard"></div>
@@ -74,8 +74,9 @@
 		<script type="text/javascript" src="playingCards.ui.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-				var cardDeck = $("#cardDeck").playingCards();
-				cardDeck.spread();
+				var gameBoard = $('#gameBoard').playingCards();
+				
+				var cardDeck = new playingCards(); //$('#cardDeck').playingCards();
 				
 				var hand = [];
 				var enemyHand = [];
@@ -92,56 +93,24 @@
 						el.append(hand[i].getHTML());
 					}
 				}
-				var showEnemyHand = function() {
-					var el = $('#enemyHand');
-					el.html('');
-					for (var i = 0; i < enemyHand.length; i++) {
-						el.append(enemyHand[i].getHTML());
-					}
-				}
 				
 				var doShuffle = function() {
 					cardDeck.shuffle();
-					cardDeck.spread();
 				}
 				
 				var doDrawCard = function() {
-					var c = cardDeck.draw();
-					if (!c) {
-						showError('No more cards');
-						return;
-					}
 					if (hand.length == 6) {
 						showError('Your hand is full');
 						return;
 					}
-					hand[hand.length] = c;
-					cardDeck.spread();
-					showHand();
-				}
-				var doDrawEnemyCard = function() {
 					var c = cardDeck.draw();
 					if (!c) {
 						showError('No more cards');
 						return;
 					}
-					enemyHand[enemyHand.length] = c;
-					cardDeck.spread();
-					showEnemyHand();
+					hand[hand.length] = c;
+					showHand();
 				}
-				
-				doDrawCard();
-				doDrawCard();
-				doDrawCard();
-				doDrawCard();
-				doDrawCard();
-				doDrawCard();
-				//doDrawEnemyCard();
-				//doDrawEnemyCard();
-				//doDrawEnemyCard();
-				//doDrawEnemyCard();
-				//doDrawEnemyCard();
-				//doDrawEnemyCard();
 				
 				$('#shuffler').click(doShuffle);
 				
@@ -160,10 +129,7 @@
 					var c = hand.pop();
 					showHand();
 					cardDeck.addCard(c);
-					cardDeck.spread();
 				});
-				
-				$('#yourHand').click(doDrawCard);
 			});
 		</script>
 	</div>

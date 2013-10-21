@@ -139,11 +139,11 @@ if (Array.indexOf === undefined) {
      * configuration defaults
      */
     playingCards.defaults = {
-        "decks": 1,
+        "decks": 2,
         // TODO: enable 'font' option -- loading cards.ttf
         "renderMode": 'css',
-        "startShuffled": true,
-        "jokers": 0,
+        "startShuffled": false,
+        "jokers": 2,
         "jokerText": "Joker",
         "ranks": {
             "2": "Two",
