@@ -1,18 +1,73 @@
-<form role="form" action="./main.html">
-	<div class="form-group">
-		<label for="currentpassword">Current password</label>
-		<input type="password" class="form-control" id="currentpassword" placeholder="Current password">
+<script>
+function displayResult() {
+	<!-- Here set the users selected theme and set it as the default-->
+	document.body.style.backgroundColor="#f3f3f3";
+}
+</script>
+<ul class="nav nav-pills" id="settingsTabs">
+	<li class="active"><a href="#email" data-toggle="tab">Email Settings</a></li>
+	<li><a href="#password" data-toggle="tab">Passowrd Settings</a></li>
+	<li><a href="#preferences" data-toggle="tab">Preference Settings</a></li>
+	
+</ul>
+<div class="tab-content">
+	<div class="tab-pane fade active in" id="email">
+		<br>
+		<form role="form" action="./main.html">
+		<div class="form-group">
+			<label for="currentemail">Current Email</label>
+			<input type="email" class="form-control" id="currentemail" placeholder="Current email">
+		</div>
+		<div class="form-group">
+			<label for="newemail">New Email</label>
+			<input type="email" class="form-control" id="newemail" placeholder="New email">
+		</div>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox">Recieve email notifications
+			</label>
+		</div>
+		<button type="submit" class="btn btn-default">Update</button>
+	</form>
+	<br>
+		<br>
 	</div>
-	<div class="form-group">
+	
+	<div class="tab-pane fade in" id="password">
+	<form role="form" action="./main.html">
+		<br>
+		
+			<div class="form-group">
+			<label for="currentpassword">Current password</label>
+			<input type="password" class="form-control" id="currentpassword" placeholder="Current password">
+			</div>
+		<div class="form-group">
 		<label for="newpassword">New Password</label>
 		<input type="password" class="form-control" id="newpassword" placeholder="New password">
 	</div>
-	<div class="checkbox">
-		<label>
-			<input type="checkbox">Recieve email notifications
-		</label>
-	</div>
+	
 	<button type="submit" class="btn btn-default">Update</button>
 </form><br>
+		<br>
+	</div>
+	
+	
+	<div class="tab-pane fade in" id="preferences">
+		<br>
+		<form role="form" action="./main.html">
+		<div class="form-group">
+			<label for="background">Background</label><br></br>
+			<button type="button" onclick="displayResult()">Grey Theme</button>
+		</div>
+		<button type="submit" class="btn btn-default">Update</button>
+	</form>
+		
+		<br>
+	</div>
+	
+</div>
+
 <a href="./main.html">Back</a>
+</div>
+</body>
 
