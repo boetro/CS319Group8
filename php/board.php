@@ -6,15 +6,21 @@
   {
   
     private $state = array(array());
+    private $players = array();
   
-    public function __construct() {
+    public function __construct($players) {
+      
+      if(!is_array($players)) 
+        throw new Exception('players paramater must be an array');
+        
       $this->makeBlankBoard();
+      $this->players = $players;
     }
     
     /**
      * Return a JSON representation of this board 
      **/
-    public function getJSONBoard() {
+    public function toJSONBoard() {
       
       // TODO
     }
