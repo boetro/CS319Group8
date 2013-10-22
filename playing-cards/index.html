@@ -48,7 +48,7 @@
 		<div class="row" style="background-color:mistyrose;">
 			<div class="col-md-12">
 				<h2>Game Board</h2>
-				<div id="gameBoard" style="width:800px;"></div>
+				<div id="gameBoard" style="width:650px;"></div>
 			</div>
 		</div>
 		<div class="row" style="background-color:paleturquoise;">
@@ -60,7 +60,7 @@
 		<div class="row" style="background-color:mistyrose;">
 			<div class="col-md-12">
 				<h2>Card Deck</h2>
-				<div id="cardDeck" style="width:800px;"></div>
+				<div id="cardDeck"></div>
 			</div>
 		</div>
 		<div class="row" style="background-color:paleturquoise;">
@@ -74,12 +74,10 @@
 		<script type="text/javascript" src="playingCards.ui.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-				var gameBoard = $('#gameBoard').playingCards();
-				
-				var cardDeck = new playingCards(); //$('#cardDeck').playingCards();
+				var cardDeck = $('#gameBoard').playingCards();
+				cardDeck.spread();
 				
 				var hand = [];
-				var enemyHand = [];
 				
 				var showError = function(msg) {
 					$('#error').html(msg).show();
@@ -92,10 +90,14 @@
 					for (var i = 0; i < hand.length; i++) {
 						el.append(hand[i].getHTML());
 					}
+					$('#yourHand > .playingCard').each(function(index) {
+						$(this).attr('id', 'hand' + index);
+					});
 				}
 				
 				var doShuffle = function() {
 					cardDeck.shuffle();
+					cardDeck.spread();
 				}
 				
 				var doDrawCard = function() {
@@ -103,7 +105,7 @@
 						showError('Your hand is full');
 						return;
 					}
-					var c = cardDeck.draw();
+					var c = drawDeck.draw();
 					if (!c) {
 						showError('No more cards');
 						return;
@@ -128,7 +130,31 @@
 					}
 					var c = hand.pop();
 					showHand();
-					cardDeck.addCard(c);
+					drawDeck.addCard(c);
+				});
+				
+				var drawDeck = new playingCards();
+				drawDeck.shuffle();
+				doDrawCard();
+				doDrawCard();
+				doDrawCard();
+				doDrawCard();
+				doDrawCard();
+				doDrawCard();
+				
+				$('#yourHand > .playingCard').click(function() {
+					alert('You clicked card ' + this.id);
+					
+					if (!hand.length) {
+						showError('Your hand is empty');
+						return;
+					}
+					var c = hand.pop();
+					showHand();
+					var discard = $('#discard');
+					discard.html('');
+					discard.html(c.getHTML());
+					doDrawCard();
 				});
 			});
 		</script>

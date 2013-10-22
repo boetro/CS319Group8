@@ -143,7 +143,7 @@ if (Array.indexOf === undefined) {
         // TODO: enable 'font' option -- loading cards.ttf
         "renderMode": 'css',
         "startShuffled": false,
-        "jokers": 2,
+        "jokers": 0,
         "jokerText": "Joker",
         "ranks": {
             "2": "Two",
@@ -155,7 +155,6 @@ if (Array.indexOf === undefined) {
             "8": "Eight",
             "9": "Nine",
             "10": "Ten",
-            "J": "Jack",
             "Q": "Queen",
             "K": "King",
             "A": "Ace"
