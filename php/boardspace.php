@@ -1,6 +1,6 @@
 <?php
   
-  class BoardSpace 
+  class BoardSpace implements Serializable
   {
     
     private $card;
@@ -30,6 +30,16 @@
       }
       
       return false;
+    }
+    
+    public function serialize() {
+      
+      // TODO
+    }
+    
+    public function unserialize() {
+      
+      // TODO
     }
   }
   
