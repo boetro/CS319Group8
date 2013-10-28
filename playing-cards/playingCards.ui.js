@@ -33,7 +33,50 @@
             i;
         to.html('');
         // clear (just a demo)
-        for (i = 0; i < l; i++) {
+        for(i = 0; i < 12; i++){
+            to.append(this.cards[i].getHTML());
+        }
+        to.append(this.cards[35].getHTML());
+        for(i = 36; i <= 45; i++){
+            to.append(this.cards[i].getHTML());
+        }
+        to.append(this.cards[12].getHTML());
+        to.append(this.cards[34].getHTML());
+        for(i = 63; i <= 71; i++){
+            to.append(this.cards[i].getHTML());
+        }
+        to.append(this.cards[46].getHTML());
+        to.append(this.cards[13].getHTML());
+        to.append(this.cards[33].getHTML());
+        to.append(this.cards[62].getHTML());
+        for(i = 83; i <= 89; i++){
+            to.append(this.cards[i].getHTML());
+        }
+        to.append(this.cards[72].getHTML());
+        to.append(this.cards[47].getHTML());
+        to.append(this.cards[14].getHTML());
+        to.append(this.cards[32].getHTML());
+        to.append(this.cards[61].getHTML());
+        to.append(this.cards[82].getHTML());
+        for(i = 95; i >= 90; i--){
+            to.append(this.cards[i].getHTML());
+        }
+        to.append(this.cards[73].getHTML());
+        to.append(this.cards[48].getHTML());
+        to.append(this.cards[15].getHTML());
+        to.append(this.cards[31].getHTML());
+        to.append(this.cards[60].getHTML());
+        for(i = 81; i >= 74; i--){
+            to.append(this.cards[i].getHTML());
+        }
+        to.append(this.cards[49].getHTML());
+        to.append(this.cards[16].getHTML());
+        to.append(this.cards[30].getHTML());
+        for(i = 59; i >= 50; i--){
+            to.append(this.cards[i].getHTML());
+        }
+        to.append(this.cards[17].getHTML());
+        for(i = 29; i >= 18; i--){
             to.append(this.cards[i].getHTML());
         }
     };
