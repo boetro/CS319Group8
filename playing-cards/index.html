@@ -143,7 +143,7 @@
 				doDrawCard();
 				
 				$('#yourHand > .playingCard').click(function() {
-					alert('You clicked card ' + this.id);
+					//alert('You clicked card ' + this.id);
 					if (!hand.length) {
 						showError('Your hand is empty');
 						return;
@@ -154,9 +154,11 @@
 					var tmpHand = [];
 					for (var i = 0; i < 6; i++) {
 						currElement = hand.pop();
-						if(this == currElement){
+						if(this.id == currElement.id){ //I never get into here. what can I compare the card to? because '.id' does not work
 							discardElement = currElement;
+							alert('its equal ' + this.id);
 						}else{
+							alert('i contued');
 							tmpHand[hand.length] = currElement;
 						}
 					}
