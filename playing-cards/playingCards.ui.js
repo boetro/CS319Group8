@@ -71,7 +71,7 @@
         if (this.rank === "N") {
             txt = this.rankString.split('').join('<br />');
         }
-        var strBuild = ['<div class="playingCard"><div class="front ', this.colorCls, '"><div class="corner">', txt, '<br />', this.suitCode, '</div>'];
+        var strBuild = ['<div class="playingCard '+this.suit+this.rank+'"><div class="front ', this.colorCls, '"><div class="corner">', txt, '<br />', this.suitCode, '</div>'];
         strBuild = strBuild.concat(this.buildIconHTML());
         strBuild = strBuild.concat('<div class="corner cornerBR flip">', txt, '<br />', this.suitCode, '</div></div></div>');
         this.html = strBuild.join('');

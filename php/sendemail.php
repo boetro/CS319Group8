@@ -23,7 +23,10 @@ if(count($results) <= 0){
 	$message = "<Other users name> has played in one of your games.  It is now your turn to play. <link to game>";
 	$from = "sequence_notifications@sequencegame.com";
 	$headers = "From:" . $from;
-	mail($to,$subject,$message,$headers);
-	echo "Mail Sent.";
+	if(!mail($to,$subject,$message,$headers)){
+		echo "Mail not sent";
+	}else{
+		echo "Mail Sent. To: ".$to;
+	}
 }
 ?>
