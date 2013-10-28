@@ -91,7 +91,7 @@
 						el.append(hand[i].getHTML());
 					}
 					$('#yourHand > .playingCard').each(function(index) {
-						$(this).attr('id', 'hand' + index);
+						$(this).attr('id', this); //change this line to be the card description
 					});
 				}
 				
@@ -143,7 +143,7 @@
 				doDrawCard();
 				
 				$('#yourHand > .playingCard').click(function() {
-					//alert('You clicked card ' + this.id);
+					//alert('You clicked card ' + this.id); /*UNCOMMENT after fix is verified*/
 					if (!hand.length) {
 						showError('Your hand is empty');
 						return;
@@ -154,11 +154,11 @@
 					var tmpHand = [];
 					for (var i = 0; i < 6; i++) {
 						currElement = hand.pop();
-						if(this.id == currElement.id){ //I never get into here. what can I compare the card to? because '.id' does not work
-							discardElement = currElement;
-							alert('its equal ' + this.id);
+						if(this.id == currElement){ 
+							discardElement = currElement; //this line never get executed 
+							alert('its equal ' + this.suit); //DELETE after fix
 						}else{
-							alert('i contued');
+							alert('i contued ' +  this);  //DELETE after fix
 							tmpHand[hand.length] = currElement;
 						}
 					}
