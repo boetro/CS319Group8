@@ -148,22 +148,20 @@
 						showError('Your hand is empty');
 						return;
 					}
+					
 					var discardElement;
 					var currElement;
 					var tmpHand = [];
-					var j = 5;
 					for (var i = 0; i < 6; i++) {
+						currElement = hand.pop();
 						if(this == currElement){
 							discardElement = currElement;
 						}else{
 							tmpHand[hand.length] = currElement;
-							
-							j--;
 						}
-						currElement = hand.pop();
 					}
 					hand = tmpHand;
-					//var c = hand.pop();
+
 					showHand();
 					var discard = $('#discard');
 					discard.html('');
