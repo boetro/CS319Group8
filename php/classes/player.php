@@ -1,6 +1,6 @@
 <?php
 
-	class User
+	class Player
 	{
 		private $gamerid;
 		private $passhash;

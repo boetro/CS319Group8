@@ -1,6 +1,5 @@
 <?php
 
-require '../classes/user.php';
 require '../classes/connect.php';
 require '../classes/util.php';
 
