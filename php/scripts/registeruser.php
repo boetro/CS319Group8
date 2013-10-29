@@ -1,7 +1,8 @@
 <?php
 
-require 'user.php';
-require 'connect.php';
+require '../classes/user.php';
+require '../classes/connect.php';
+require '../classes/util.php';
 
 $socket = new Connect();
 $con = $socket->getConnection();
@@ -11,7 +12,7 @@ $password = $_POST["password"];
 $email = $_POST["email"];
 $confirm = $_POST["confirmpass"];
 
-$pass_hash = User::makePassHash($password, $username);
+$pass_hash = Util::makePassHash($password, $username);
 
 # prepared statements escape the data, elimating need for mysql_escape
 $selectAll = $con->prepare("SELECT * FROM player WHERE gamertag = :username LIMIT 1");

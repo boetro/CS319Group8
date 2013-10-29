@@ -1,7 +1,7 @@
 <?php
 
-	require 'user.php';
-	require 'connect.php';
+	require '../classes/user.php';
+	require '../classes/connect.php';
 
 	$socket = new Connect();
 	$con = $socket->getConnection();

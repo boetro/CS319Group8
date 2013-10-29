@@ -1,6 +1,7 @@
 <?php
-	require 'user.php';
-	require 'connect.php';
+	require '../classes/user.php';
+	require '../classes/connect.php';
+	require '../classes/util.php';
 
 	$socket = new Connect();
 	$con = $socket->getConnection();
@@ -22,7 +23,7 @@
 	 	header('Location: ../login.html');
 	} else{
 		$row = $results[0];
-		if(User::verifyPass($row['pass_hash'], $password, $username)){
+		if(Util::verifyPass($row['pass_hash'], $password, $username)){
 			header('Location: ../main.html');
 		}else{
 			header('Location: ../login.html');
