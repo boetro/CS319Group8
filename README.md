@@ -42,7 +42,6 @@ Our target audience is smart phone, tablet, and desktop users who enjoy playing 
 - SQL
 - JavaScript
 - jQuery
-- require.js
 
 ### Timeline
 
