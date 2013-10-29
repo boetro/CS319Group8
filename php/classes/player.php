@@ -1,5 +1,7 @@
 <?php
 
+	require 'connect.php';
+
 	class Player
 	{
 		
