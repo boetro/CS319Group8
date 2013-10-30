@@ -10,7 +10,8 @@
 <body>
 	
 	<script>
-		Db.find(5, 'player');
+		// value, column, table
+		Db.find(8, 'id', 'player');
 	</script>
 </body>
 </html>

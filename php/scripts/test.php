@@ -2,8 +2,18 @@
 
 	require '../classes/db.php';
 
-	$id = $_GET['id'];
-	$tableName = $_GET['tableName'];
-	
-	$playerData = Db::findById($id, $tableName);
-	echo $playerData;
+	$value = $_GET['value'];
+	$column = $_GET['column'];
+	$table= $_GET['table'];
+
+	try 
+	{
+		$playerData = Db::find($value, $column, $table);
+		echo json_encode($playerData);
+	}
+	catch(Exception $e) {
+		echo json_encode(array(
+			'error' => true,
+			'message' => $e->getMessage(),
+		));
+	}

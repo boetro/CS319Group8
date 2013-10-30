@@ -13,17 +13,20 @@ var Db = (function() {
 	var _examplePrivate = 0;
 	
 	/* example 'public' function */
-	var find = function(id, tableName) {
+	var find = function(value, column, table) {
 		
 		$.ajax({
 			url: CONFIG.Dir + 'php/scripts/test.php',
 			type: 'GET',
-			data: {id : id, tableName : tableName},
+			data: {value : value, column : column, table : table},
 			success: function(response) {
-				if(response) {
-					console.log($.parseJSON(response));
+
+				var jsonData = $.parseJSON(response);
+
+				if(jsonData['error']) {
+					console.log(jsonData['message']);
 				} else {
-					console.log("Sorry, that user does not exist.");
+					console.log(jsonData);
 				}
 			},
 			error: function(xhr, status, error) {
@@ -32,7 +35,12 @@ var Db = (function() {
 		});
 	};
 
+	var makeUser() = function() {
+
+	};
+
 	return {
 		find:find,
+		makeUser:makeUser,
 	};
 })();
