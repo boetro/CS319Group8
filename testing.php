@@ -11,7 +11,27 @@
 	
 	<script>
 		// value, column, table
-		Db.find(8, 'id', 'player');
+		var findPromise = Db.find('holdenrehg@gmail.com', 'email', 'player');
+		
+		// after your promise resolves
+		findPromise.done(function(result) {
+			console.log($.parseJSON(result));
+		});
+
+		// email, password, gamertag, theme_color
+		/*var makePromise = Db.makeUser('holdenrehg@gmail.com', 'password', 'tag', 'blue');
+		
+		// after your promise resolves
+		makePromise.done(function(result) {
+			if(result) {
+
+				result = $.parseJSON(result);
+				console.log($.parseJSON(result['before']));
+				console.log($.parseJSON(result['after']));
+			} else {
+				console.log('Could not make user');
+			}
+		});*/
 	</script>
 </body>
 </html>

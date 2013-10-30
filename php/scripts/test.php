@@ -2,13 +2,9 @@
 
 	require '../classes/db.php';
 
-	$value = $_GET['value'];
-	$column = $_GET['column'];
-	$table= $_GET['table'];
-
 	try 
 	{
-		$playerData = Db::find($value, $column, $table);
+		$playerData = Db::find($_POST['value'], $_POST['column'], $_POST['table']);
 		echo json_encode($playerData);
 	}
 	catch(Exception $e) {

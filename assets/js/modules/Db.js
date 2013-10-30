@@ -15,18 +15,21 @@ var Db = (function() {
 	/* example 'public' function */
 	var find = function(value, column, table) {
 		
-		$.ajax({
+		return $.ajax({
 			url: CONFIG.Dir + 'php/scripts/test.php',
-			type: 'GET',
+			type: 'POST',
 			data: {value : value, column : column, table : table},
 			success: function(response) {
 
 				var jsonData = $.parseJSON(response);
-
+				
 				if(jsonData['error']) {
-					console.log(jsonData['message']);
+					
+					throw "There was a problem with find() : " + jsonData['message'];
+					return false;
 				} else {
-					console.log(jsonData);
+
+					return jsonData;
 				}
 			},
 			error: function(xhr, status, error) {
@@ -35,8 +38,29 @@ var Db = (function() {
 		});
 	};
 
-	var makeUser() = function() {
+	var makeUser = function(email, password, gamertag, theme_color) {
 
+		return $.ajax({
+			url: CONFIG.Dir + 'php/scripts/addplayer.php',
+			type: 'POST',
+			data: {email : email, password : password, gamertag : gamertag, theme_color : theme_color},
+			success: function(response) {
+
+				var jsonData = $.parseJSON(response);
+
+				if(jsonData['error']) {
+
+					throw "There was a problem with makeUser() : " + jsonData['message'];
+					return false;
+				} else {
+					
+					return jsonData;
+				}
+			},
+			error: function(xhr, status, error) {
+
+			}
+		});
 	};
 
 	return {

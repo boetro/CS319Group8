@@ -1,11 +1,13 @@
 <?php
 
+	/* @requires connect.php */
 	require 'db.php';
 	require 'util.php';
+	require_once 'connect.php';
 
 	class Player implements Serializable
 	{
-		private $tableName = 'player';
+		private $table = 'player';
 		
 		/**
 		 * @column idplayer
@@ -37,7 +39,6 @@
 		/**
 		 * @column Theme_Color
 		 **/
-		// TODO change caseing in database
 		private $theme_color;
 		
 		public function __construct($email, $password, $gamertag, $theme_color)
@@ -54,16 +55,33 @@
 		 * Takes the current representation of a User, and either creates a new row in the database,
 		 * or updates the current one that exists in the database
 		 */
-		public function push() {
-			if(!isset($id)) 
+		public function push() 
+		{
+			$socket = new Connect();
+			$con = $socket->getConnection();
+
+			$addStmt = "INSERT INTO player (email, pass_hash, gamertag, theme_color) VALUES (:email, :pass_hash, :gamertag, :theme_color)";
+			$updateStmt = "UPDATE player SET email=:email, pass_hash=:pass_hash, gamertag=:gamertag, theme_color=:theme_color WHERE id=:id";
+
+			if(!isset($this->id)) 
 			{
 				// create a new player in the database
-				return 'no player exists';
+				// TODO, error checking on values that already exist in the database
+				$add = $con->prepare($addStmt);
+				if( !$add->execute(array(':email' => $this->email, ':pass_hash' => $this->pass_hash, ':gamertag' => $this->gamertag, ':theme_color' => $this->theme_color))) 
+					throw new Exception("Could not add new Player to the database in push function.");
+
+				$this->created_at = date('Y-m-d H:i:s');
+				$this->id = $con->lastInsertId(); 
 			} 
 			else 
 			{
 				// update current player
-				return 'player exists';
+				$current = Db::find($this->id, 'id', 'player');
+
+				$update = $con->prepare($updateStmt);
+				if(!$update->execute(array(':email' => $this->email, ':pass_hash' => $this->pass_hash, ':gamertag' => $this->gamertag, ':theme_color' => $this->theme_color, ':id' => $this->id))) 
+					throw new Exception();
 			}
 		}
 
@@ -73,11 +91,10 @@
 		 * @param property to get
 		 * @return property or false if it does not exist
 		 */
-		public function __get($property) {
-			
-			if (property_exists($this, $property)) {
+		public function __get($property) 
+		{	
+			if (property_exists($this, $property)) 
 		      return $this->$property;
-		    }
 
 		    return false;
 		}
@@ -89,9 +106,13 @@
 		 * @param value to set the property to
 		 * @return true on successfull set, false on fail
 		 */
-		public function __set($property, $value) {
-			
-			if (property_exists($this, $property)) {
+		public function __set($property, $value) 
+		{	
+			if($property == 'id')
+				throw new Exception("Please do not try to alter the id of the player.");
+
+			if (property_exists($this, $property)) 
+			{
 		      $this->$property = $value;
 		      return true;
 		    }
@@ -102,12 +123,12 @@
 		public function serialize() 
 		{
 	    	return json_encode(array(
-	    		'id' => $id,
-	    		'email' => $email,
-	    		'pass_hash' => $pass_hash,
-	    		'gamertag' => $gamertag,
-	    		'theme_color' => $theme_color,
-	    		'created_at' => $created_at,
+	    		'id' => $this->id,
+	    		'email' => $this->email,
+	    		'pass_hash' => $this->pass_hash,
+	    		'gamertag' => $this->gamertag,
+	    		'theme_color' => $this->theme_color,
+	    		'created_at' => $this->created_at,
 	    	));
 	    }
 	    
