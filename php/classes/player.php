@@ -1,9 +1,8 @@
 <?php
 
-	require 'connect.php';
-
-	class Player
+	class Player implements Serializable
 	{
+		private $tableName = 'player';
 		
 		/**
 		 * @column idplayer
@@ -85,4 +84,14 @@
 
 		    return false;
 		}
+
+		public function serialize() {
+	      
+	    	// TODO
+	    }
+	    
+	    public function unserialize() {
+	      
+	    	// TODO
+	    }
 	}

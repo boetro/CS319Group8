@@ -33,6 +33,6 @@ if(!$add->execute(array(':email' => $email, ':pass_hash' => $pass_hash, ':userna
 	die();
 }
 
-header('Location: ../main.html');
+header('Location: ../../main.html');
 
 # connection will close on destruction of PDO object
