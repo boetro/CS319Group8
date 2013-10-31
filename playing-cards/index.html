@@ -78,6 +78,7 @@
 				cardDeck.spread();
 				
 				var hand = [];
+				var clickedElement;
 				
 				var showError = function(msg) {
 					$('#error').html(msg).show();
@@ -91,7 +92,7 @@
 						el.append(hand[i].getHTML());
 					}
 					$('#yourHand > .playingCard').each(function(index) {
-						$(this).attr('id', this); //change this line to be the card description
+						$(this).attr('id', "hand"+index); //change this line to be the card description
 					});
 				}
 				
@@ -111,6 +112,9 @@
 						return;
 					}
 					hand[hand.length] = c;
+					if(hand.length == 6){
+						alert("new card: " + c);
+						}
 					showHand();
 				}
 				
@@ -142,32 +146,36 @@
 				doDrawCard();
 				doDrawCard();
 				
+				var highLightPossibleMoves = function(){
+					
+				}
 				$('#yourHand > .playingCard').click(function() {
-					//alert('You clicked card ' + this.id); /*UNCOMMENT after fix is verified*/
 					if (!hand.length) {
 						showError('Your hand is empty');
 						return;
 					}
+					var c = [];
+					c = this.id
 					
-					var discardElement;
-					var currElement;
+					//highLightPossibleMoves();
+					var index = Number(c[4]);
+					alert('You clicked card ' + index); /*UNCOMMENT after fix is verified*/
+					showHand();
+					
 					var tmpHand = [];
-					for (var i = 0; i < 6; i++) {
-						currElement = hand.pop();
-						if(this.id == currElement){ 
-							discardElement = currElement; //this line never get executed 
-							alert('its equal ' + this.suit); //DELETE after fix
-						}else{
-							alert('i contued ' +  this);  //DELETE after fix
-							tmpHand[hand.length] = currElement;
-						}
+					
+					if(index != 5){
+						alert("this is not the last element "+hand[5]);
+						tmpHand[5] = hand[5];
+						tmpHand[index]=hand[index];
+						hand[index] = tmpHand[5];
+						hand[5] = tmpHand[index];
 					}
-					hand = tmpHand;
-
+					clickedElement = hand.pop();
 					showHand();
 					var discard = $('#discard');
 					discard.html('');
-					discard.html(discardElement.getHTML());
+					discard.html(clickedElement.getHTML());
 					doDrawCard();
 				});
 			});
