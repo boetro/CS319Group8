@@ -17,26 +17,8 @@ width: 3.8em;
 height: 5em;
 }
 
-.playingCard div:hover{ /* to show the back of the card, hide the front */
-position: relative;
-background-color:#00ff00;
-border:1px solid #666;
-font-size: 20px;
-float: left;
-width: 3.8em;
-height: 5em;
-}
-
 .playingCard .front {
 background-color: #fff;
-color: #000;
-position: absolute;
-width: 100%;
-height: 100%;
-}
-
-.playingCard .front div:hover{
-background-color: transparent;
 color: #000;
 position: absolute;
 width: 100%;
