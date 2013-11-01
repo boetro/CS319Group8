@@ -78,6 +78,7 @@
 				cardDeck.spread();
 				
 				var hand = [];
+				var clickedElement;
 				
 				var showError = function(msg) {
 					$('#error').html(msg).show();
@@ -91,7 +92,7 @@
 						el.append(hand[i].getHTML());
 					}
 					$('#yourHand > .playingCard').each(function(index) {
-						$(this).attr('id', 'hand' + index);
+						$(this).attr('id', "hand"+index);
 					});
 				}
 				
@@ -142,18 +143,52 @@
 				doDrawCard();
 				doDrawCard();
 				
+				$('#yourHand > .playingCard').mouseover(function(){
+					var tmp =[];
+					var c = this.id;
+					var tempNode;
+					var index = Number(c[4]);
+					//hand[index].style.background = 'yellow';
+					
+					/*for (var i = 0; i < hand.length; i++) { //get card descritpion and invoke hoover on cards that are the same
+						if(i == index){
+						alert('In it... '); 
+							tempNode = hand.pop();
+							tmp[hand.length+1] = tempNode;
+						}else{
+							tmp[hand.length] = hand.pop();
+						}
+					}*/
+				});
+				
+				$('#yourHand > .playingCard').mouseout(function() {
+							
+				});
+				
 				$('#yourHand > .playingCard').click(function() {
-					alert('You clicked card ' + this.id);
 					
 					if (!hand.length) {
 						showError('Your hand is empty');
 						return;
 					}
-					var c = hand.pop();
+					var c = [];
+					c = this.id;
+					var index = Number(c[4]);
+					showHand();
+					alert('Hoovering over" '); //UNCOMMENT after fix is verified
+					var tmpHand = [];
+					
+					if(index != 5){
+						tmpHand[5] = hand[5];
+						tmpHand[index]=hand[index];
+						hand[index] = tmpHand[5];
+						hand[5] = tmpHand[index];
+					}
+					clickedElement = hand.pop();
 					showHand();
 					var discard = $('#discard');
 					discard.html('');
-					discard.html(c.getHTML());
+					discard.html(clickedElement.getHTML());
 					doDrawCard();
 				});
 			});
