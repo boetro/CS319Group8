@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>CS 319 Cards</title>
+	
+	<link rel="stylesheet" type="text/css" media="all" href="playingCards.ui.css"/>
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+</head>
+
+<body>
+	<div class="container">		
+		<div class="row" style="background-color:mistyrose;">
+			<div class="col-md-10">
+				<div id="gameBoard"></div>
+			</div>
+			<div class="col-md-2">
+				<div id="chat">Chat</div>
+			</div>
+		</div>
+		
+		<div class="row" style="background-color: paleturquoise;">
+			<div class="col-md-12">
+				<h2>Controls</h2>
+				<p class="text-danger" id="error"></p>
+				<button type="button" class="btn btn-default" id="shuffler">Shuffle</button>
+				<button type="button" class="btn btn-success" id="draw">Draw a card</button>
+				<button type="button" class="btn btn-danger" id="addCard">Add drawn card back</button>
+				<button type="button" class="btn btn-primary" id="shuffleDraw">Shuffle, then draw</button>
+			</div>
+		</div>
+
+		<div class="row" style="background-color:paleturquoise;">
+			<div class="col-md-6">
+				<h2>Your Hand</h2>
+				<div id="yourHand"></div>
+			</div>
+			<div class="col-md-3">
+				<h2>Card Deck</h2>
+				<div id="cardDeck">
+					<div class="playingCard"></div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<h2>Discard Pile</h2>
+				<div id="discard"></div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="playingCards.js"></script>
+		<script type="text/javascript" src="playingCards.ui.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var cardDeck = $('#gameBoard').playingCards();
+				cardDeck.spread();
+				
+				var hand = [];
+				
+				var showError = function(msg) {
+					$('#error').html(msg).show();
+					setTimeout(function() { $('#error').fadeOut('slow'); }, 1000);
+				}
+				
+				var showHand = function() {
+					var el = $('#yourHand');
+					el.html('');
+					for (var i = 0; i < hand.length; i++) {
+						el.append(hand[i].getHTML());
+					}
+					$('#yourHand > .playingCard').each(function(index) {
+						$(this).attr('id', 'hand' + index);
+					});
+				}
+				
+				var doShuffle = function() {
+					cardDeck.shuffle();
+					cardDeck.spread();
+				}
+				
+				var doDrawCard = function() {
+					if (hand.length == 6) {
+						showError('Your hand is full');
+						return;
+					}
+					var c = drawDeck.draw();
+					if (!c) {
+						showError('No more cards');
+						return;
+					}
+					hand[hand.length] = c;
+					showHand();
+				}
+				
+				$('#shuffler').click(doShuffle);
+				
+				$('#draw').click(doDrawCard);
+				
+				$('#shuffleDraw').click(function() {
+					doShuffle();
+					doDrawCard();
+				});
+				
+				$('#addCard').click(function() {
+					if (!hand.length) {
+						showError('Your hand is empty');
+						return;
+					}
+					var c = hand.pop();
+					showHand();
+					drawDeck.addCard(c);
+				});
+				
+				var drawDeck = new playingCards();
+				drawDeck.shuffle();
+				doDrawCard();
+				doDrawCard();
+		 		doDrawCard();
+				doDrawCard();
+				doDrawCard();
+				doDrawCard();
+				
+				$('#yourHand > .playingCard').hover(function(card) {
+					var className = card.currentTarget.className.split(" ");
+					className = "." + className.join(".");
+					console.log(className);
+					$(className + ' .front').css("background-color", "magenta");
+				}, function(card) {
+					var className = card.currentTarget.className.split(" ");
+					className = "." + className.join(".");
+					console.log(className);
+					$(className + ' .front').css("background-color", "#fff");
+				});
+				
+				$('#yourHand > .playingCard').click(function(card) {
+					/*
+					alert('You clicked card ' + this.id);
+					if (!hand.length) {
+						showError('Your hand is empty');
+						return;
+					}
+					var c = hand.pop();
+					showHand();
+					var discard = $('#discard');
+					discard.html('');
+					discard.html(c.getHTML());
+					doDrawCard();
+					*/
+				});
+			});
+		</script>
+	</div>
+</body>
+</html>
