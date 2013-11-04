@@ -77,7 +77,7 @@
 				var cardDeck = $('#gameBoard').playingCards();
 				cardDeck.spread();
 				
-				var hand = [];
+				var hand = new Array;
 				var clickedElement;
 				
 				var showError = function(msg) {
@@ -111,7 +111,7 @@
 						showError('No more cards');
 						return;
 					}
-					hand[hand.length] = c;
+					hand.splice(hand.length, 0, c);
 					showHand();
 				}
 				
@@ -129,7 +129,7 @@
 						showError('Your hand is empty');
 						return;
 					}
-					var c = hand.pop();
+					var c = hand[hand.length];
 					showHand();
 					drawDeck.addCard(c);
 				});
@@ -149,7 +149,7 @@
 					var c = this.id;
 					var tempNode;
 					var index = Number(c[4]);
-					alert('mouse over ');
+					//alert('mouse over ');
 					//hand[index].style.background = 'yellow';
 					//this.style.backgroundColor = 'yellow';
 					$('.' + e.currentTarget.className).css('background-color','yellow');
@@ -169,16 +169,11 @@
 					c = this.id;
 					var index = Number(c[4]);
 					showHand();
-					alert('Hoovering over" '+ hand[1].class); //UNCOMMENT after fix is verified
-					var tmpHand = [];
+					alert('removing '+ hand[index].class); //UNCOMMENT after fix is verified
 					
-					if(index != 5){
-						tmpHand[5] = hand[5];
-						tmpHand[index]=hand[index];
-						hand[index] = tmpHand[5];
-						hand[5] = tmpHand[index];
-					}
-					clickedElement = hand.pop();
+					clickedElement = hand[index]; //stores element being removed
+					hand.splice(index, 1); //removes card
+					
 					showHand();
 					var discard = $('#discard');
 					discard.html('');
