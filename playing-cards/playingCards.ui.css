@@ -140,3 +140,16 @@ top: 2.5em;
 left: 2.45em;
 top: 3.5em;
 }
+.game {
+	width: 945px; 
+}
+.chatbox {
+	height: 530px;
+	width: 200px;
+	background-color: white;
+	margin-bottom: 3px;
+	overflow: auto;
+}
+.container {
+	min-width: 1200px;
+}
