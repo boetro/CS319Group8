@@ -21,17 +21,6 @@
 				<div id="chat">Chat</div>
 			</div>
 		</div>
-		
-		<div class="row" style="background-color: paleturquoise;">
-			<div class="col-md-12">
-				<h2>Controls</h2>
-				<p class="text-danger" id="error"></p>
-				<button type="button" class="btn btn-default" id="shuffler">Shuffle</button>
-				<button type="button" class="btn btn-success" id="draw">Draw a card</button>
-				<button type="button" class="btn btn-danger" id="addCard">Add drawn card back</button>
-				<button type="button" class="btn btn-primary" id="shuffleDraw">Shuffle, then draw</button>
-			</div>
-		</div>
 
 		<div class="row" style="background-color:paleturquoise;">
 			<div class="col-md-6">
@@ -90,7 +79,7 @@
 						showError('No more cards');
 						return;
 					}
-					hand[hand.length] = c;
+					hand.splice(hand.length, 0, c);
 					showHand();
 				}
 				
@@ -122,32 +111,50 @@
 				doDrawCard();
 				doDrawCard();
 				
-				$('#yourHand > .playingCard').hover(function(card) {
+				$(document).on('click', '#yourHand > .playingCard', function(card) { 
+
 					var className = card.currentTarget.className.split(" ");
 					className = "." + className.join(".");
-					console.log(className);
-					$(className + ' .front').css("background-color", "magenta");
-				}, function(card) {
-					var className = card.currentTarget.className.split(" ");
-					className = "." + className.join(".");
-					console.log(className);
-					$(className + ' .front').css("background-color", "#fff");
-				});
-				
-				$('#yourHand > .playingCard').click(function(card) {
-					/*
-					alert('You clicked card ' + this.id);
-					if (!hand.length) {
-						showError('Your hand is empty');
-						return;
+					if ($(className + ' .front').css("background-color") === "rgb(153, 255, 153)") {
+						$(className + ' .front').css("background-color", "#fff");
+					}else{
+						$(".playingCard .front").not( $(".occupied") ).css("background-color", "rgb(255, 255, 255)");
+						$(className + ' .front').css("background-color", "rgb(153, 255, 153)");
 					}
-					var c = hand.pop();
-					showHand();
-					var discard = $('#discard');
-					discard.html('');
-					discard.html(c.getHTML());
-					doDrawCard();
-					*/
+
+				});
+
+				$("#gameBoard > .playingCard").click(function(card){
+
+					if($(" .front", this).css("background-color") === "rgb(153, 255, 153)"){
+
+						if (!hand.length) {
+							showError('Your hand is empty');
+							return;
+						}
+						var className = card.currentTarget.className.split(" ");
+						className = "." + className.join(".");
+						$(className).each(function (index) {
+							if($(this).is('[id]')){
+								var c = this.id;
+								var index = parseInt(c.charAt(4));
+								showHand();
+								
+								clickedElement = hand[index];
+								hand.splice(index, 1);
+								
+								showHand();
+								var discard = $('#discard');
+								discard.html('');
+								discard.html(clickedElement.getHTML());
+								doDrawCard();
+								$(".playingCard .front").not( $(".occupied" ) ).css("background-color", "rgb(255, 255, 255)");
+							}
+						})
+						$(" .front", this).css("background-color", "blue");
+						$(" .front", this).attr('class', 'occupied');
+					}
+
 				});
 			});
 		</script>
