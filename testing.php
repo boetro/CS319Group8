@@ -11,7 +11,7 @@
 	
 	<script>
 		// value, column, table
-		var findPromise = Db.find('holdenrehg@gmail.com', 'email', 'player');
+		var findPromise = Db.find('holdenrehg@gmail.com', 'awpdokawdpok', 'player');
 		
 		// after your promise resolves
 		findPromise.done(function(result) {

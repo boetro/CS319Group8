@@ -8,9 +8,6 @@
  * Module primarily used to interact with php scripts, to send and recieve data
  */
 var Db = (function() {
-
-	/* can use '_' to denote a 'private' variable / function */
-	var _examplePrivate = 0;
 	
 	/* example 'public' function */
 	var find = function(value, column, table) {
