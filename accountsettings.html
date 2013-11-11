@@ -1,17 +1,14 @@
 <script>
 $(document).ready(function() {
-	$('#greyTheme').on('click', function(event) {
-		<!-- Here set the users selected theme and set it as the default -->
-		document.body.style.backgroundColor="#f3f3f3";
+	$('#default').on('click', function(event) {
+		document.body.style.backgroundColor="white";
 		event.preventDefault;
 	});
-	$('#turquoiseTheme').on('click', function(event) {
-		<!-- Here set the users selected theme and set it as the default -->
+	$('#turquoise').on('click', function(event) {
 		document.body.style.backgroundColor="paleturquoise";
 		event.preventDefault;
 	});
-	$('#roseTheme').on('click', function(event) {
-		<!-- Here set the users selected theme and set it as the default -->
+	$('#rose').on('click', function(event) {
 		document.body.style.backgroundColor="mistyrose";
 		event.preventDefault;
 	});
@@ -19,14 +16,39 @@ $(document).ready(function() {
 </script>
 
 <ul class="nav nav-pills" id="settingsTabs">
-	<li class="active"><a href="#email" data-toggle="tab">Email settings</a></li>
-	<li><a href="#password" data-toggle="tab">Password settings</a></li>
-	<li><a href="#preferences" data-toggle="tab">Preference settings</a></li>
+	<li class="active"><a href="#preferences" data-toggle="tab">Preferences</a></li>
+	<li><a href="#password" data-toggle="tab">Update Password</a></li>
+	<li><a href="#email" data-toggle="tab">Email Settings</a></li>
 </ul>
 <div class="tab-content">
-	<div class="tab-pane fade active in" id="email">
-		<br>
-		<form role="form" action="./main.html">
+	<div class="tab-pane fade in active" id="preferences"><br>
+		<form role="form" action="">
+			<div class="form-group">
+				<label for="background">Background Color</label><br>
+				<button type="button" class="btn btn-default" id="default">Default</button>
+				<button type="button" class="btn btn-default" id="turquoise">Turquoise</button>
+				<button type="button" class="btn btn-default" id="rose">Rose</button>
+			</div>
+			<button type="submit" class="btn btn-default">Update</button>
+		</form>
+	</div>
+	
+	<div class="tab-pane fade in" id="password"><br>
+		<form role="form" action="">
+			<div class="form-group">
+				<label for="currentpassword">Current password</label>
+				<input type="password" class="form-control" id="currentpassword" placeholder="Current password">
+			</div>
+			<div class="form-group">
+				<label for="newpassword">New password</label>
+				<input type="password" class="form-control" id="newpassword" placeholder="New password">
+			</div>
+			<button type="submit" class="btn btn-default">Update</button>
+		</form>
+	</div>
+	
+	<div class="tab-pane fade in" id="email"><br>
+		<form role="form" action="">
 			<div class="form-group">
 				<label for="currentemail">Current email</label>
 				<input type="email" class="form-control" id="currentemail" placeholder="Current email">
@@ -42,42 +64,5 @@ $(document).ready(function() {
 			</div>
 			<button type="submit" class="btn btn-default">Update</button>
 		</form>
-		<br>
-		<br>
-	</div>
-	
-	<div class="tab-pane fade in" id="password">
-		<form role="form" action="./main.html">
-			<br>
-			<div class="form-group">
-				<label for="currentpassword">Current password</label>
-				<input type="password" class="form-control" id="currentpassword" placeholder="Current password">
-			</div>
-			<div class="form-group">
-				<label for="newpassword">New password</label>
-				<input type="password" class="form-control" id="newpassword" placeholder="New password">
-			</div>
-	
-			<button type="submit" class="btn btn-default">Update</button>
-		</form><br>
-		<br>
-	</div>
-	
-	<div class="tab-pane fade in" id="preferences">
-		<br>
-		<form role="form" action="./main.html">
-			<div class="form-group">
-				<label for="background">Background</label><br></br>
-				<button type="button" class="btn btn-default" id="greyTheme">Grey Theme</button>
-				<button type="button" class="btn btn-default" id="turquoiseTheme">Turquoise Theme</button>
-				<button type="button" class="btn btn-default" id="roseTheme">Rose Theme</button>
-			</div>
-			<button type="submit" class="btn btn-default">Update</button>
-		</form>
-		<br>
 	</div>
 </div>
-
-<a href="./main.html">Back</a>
-</div>
-</body>

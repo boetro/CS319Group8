@@ -21,18 +21,18 @@
 	if(count($results) <= 0) 
 	{
 	 	echo 'didnt return from databse';
-	 	header('Location: ../login.html');
+	 	header('Location: ../../login.html');
 	} 
 	else
 	{
 		$row = $results[0];
 		if(Util::verifyPass($row['pass_hash'], $password, $username))
 		{
-			header('Location: ../main.html');
+			header('Location: ../../main.html');
 		}
 		else
 		{
-			header('Location: ../login.html');
+			header('Location: ../../login.html');
 		}
 
 	}
