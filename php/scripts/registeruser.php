@@ -26,13 +26,15 @@ if(count($selectAll->fetchAll()) > 0){
  	die();
 }
 
-$add = $con->prepare("INSERT INTO player (email, pass_hash, gamertag) VALUES (:email, :pass_hash, :username)");
-if(!$add->execute(array(':email' => $email, ':pass_hash' => $pass_hash, ':username' => $username))) {
+$add = $con->prepare("INSERT INTO player (email, pass_hash, gamertag, theme_color) VALUES (:email, :pass_hash, :username, :theme_color)");
+if(!$add->execute(array(':email' => $email, ':pass_hash' => $pass_hash, ':username' => $username, ':theme_color' => 'rgb(255, 255, 255)'))) {
 	echo "Error adding: ";
 	print_r($add->errorInfo());
 	die();
 }
-
-header('Location: ../../main.html');
+session_start();
+$_SESSION['gamertag'] = $username;
+$_SESSION['theme_color'] = 'rgb(255, 255, 255)';
+header('Location: ../../main.php');
 
 # connection will close on destruction of PDO object

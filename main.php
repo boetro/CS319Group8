@@ -7,9 +7,19 @@
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="./assets/js/scripts/PageLoad.js" type="text/JavaScript"></script>
+		<script type="text/javascript" src="./assets/js/scripts/validateSession.js"></script>
 	</head>
 	
-	<body>
+	<?php
+		session_start();
+		if(isset($_SESSION['gamertag']) && isset($_SESSION['theme_color'])){
+			echo '<body style="background-color:' . $_SESSION['theme_color'] . ';">';
+		}else{
+			header("Location: login.php");
+			die();
+			echo $_SESSION['gamertag'];
+		}
+	?>
 		<div class="container">
 			<h1>
 				Sequence
@@ -25,10 +35,12 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">mphilips <b class="caret"></b></a>
+							<?php
+								echo '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' . $_SESSION['gamertag'] . ' <b class="caret"></b></a>'
+							?>
 							<ul class="dropdown-menu">
 								<li><a id="settings" style="cursor: pointer">Account Settings</a></li>
-								<li><a href="./login.html">Log out</a></li>
+								<li><a href="./login.php">Log out</a></li>
 							</ul>
 						</li>
 					</ul>

@@ -60,6 +60,31 @@ var Db = (function() {
 		});
 	};
 
+	var updateUser = function(selector, value, column) {
+
+		return $.ajax({
+			url: CONFIG.Dir + 'php/scripts/updatePlayer.php',
+			type: 'POST',
+			data: {gamertag : selector, column : value},
+			success: function(response) {
+
+				var jsonData = $.parseJSON(response);
+
+				if(jsonData['error']) {
+
+					throw "There was a problem with updateUser() : " + jsonData['message'];
+					return false;
+				} else {
+					
+					return jsonData;
+				}
+			},
+			error: function(xhr, status, error) {
+
+			}
+		});
+	};
+
 	return {
 		find:find,
 		makeUser:makeUser,

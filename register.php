@@ -7,6 +7,13 @@
 	</head>
 	
 	<body>
+		<?php
+			session_start();
+			if(isset($_SESSION['gamertag']) && isset($_SESSION['theme_color'])){
+				unset($_SESSION['gamertag']);
+				unset($_SESSION['theme_color']);
+			}
+		?>
 		<div class="container">
 			<h1>
 				Register

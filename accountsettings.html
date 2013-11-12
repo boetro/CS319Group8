@@ -15,6 +15,8 @@ $(document).ready(function() {
 });
 </script>
 
+<script type="text/javascript" src="assets/js/scripts/UpdateSettings.js"></script>
+
 <ul class="nav nav-pills" id="settingsTabs">
 	<li class="active"><a href="#preferences" data-toggle="tab">Preferences</a></li>
 	<li><a href="#password" data-toggle="tab">Update Password</a></li>
@@ -29,7 +31,6 @@ $(document).ready(function() {
 				<button type="button" class="btn btn-default" id="turquoise">Turquoise</button>
 				<button type="button" class="btn btn-default" id="rose">Rose</button>
 			</div>
-			<button type="submit" class="btn btn-default">Update</button>
 		</form>
 	</div>
 	
@@ -43,7 +44,6 @@ $(document).ready(function() {
 				<label for="newpassword">New password</label>
 				<input type="password" class="form-control" id="newpassword" placeholder="New password">
 			</div>
-			<button type="submit" class="btn btn-default">Update</button>
 		</form>
 	</div>
 	
@@ -62,7 +62,7 @@ $(document).ready(function() {
 					<input type="checkbox">Recieve email notifications
 				</label>
 			</div>
-			<button type="submit" class="btn btn-default">Update</button>
 		</form>
 	</div>
+	<button type="button" class="btn btn-default" id="update">Update</button>
 </div>

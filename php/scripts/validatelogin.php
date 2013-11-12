@@ -1,6 +1,7 @@
 <?php
-	require '../classes/connect.php';
-	require '../classes/util.php';
+	include_once '../classes/player.php';
+	include_once '../classes/connect.php';
+	include_once '../classes/util.php';
 
 	$socket = new Connect();
 	$con = $socket->getConnection();
@@ -28,7 +29,10 @@
 		$row = $results[0];
 		if(Util::verifyPass($row['pass_hash'], $password, $username))
 		{
-			header('Location: ../../main.html');
+			session_start();
+			$_SESSION['gamertag'] = $username;
+			$_SESSION['theme_color'] = $row['theme_color'];
+			header('Location: ../../main.php');
 		}
 		else
 		{
