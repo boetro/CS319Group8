@@ -23,7 +23,6 @@ var Db = (function() {
 				if(jsonData['error']) {
 					
 					throw "There was a problem with find() : " + jsonData['message'];
-					return false;
 				} else {
 
 					return jsonData;
@@ -48,7 +47,6 @@ var Db = (function() {
 				if(jsonData['error']) {
 
 					throw "There was a problem with makeUser() : " + jsonData['message'];
-					return false;
 				} else {
 					
 					return jsonData;
@@ -60,24 +58,17 @@ var Db = (function() {
 		});
 	};
 
-	var updateUser = function(selector, value, column) {
+	var updateUser = function(value, column) {
 
 		return $.ajax({
 			url: CONFIG.Dir + 'php/scripts/updatePlayer.php',
 			type: 'POST',
-			data: {gamertag : selector, column : value},
+			data: {column : column, value : value},
 			success: function(response) {
-
+				console.log(response);
 				var jsonData = $.parseJSON(response);
-
-				if(jsonData['error']) {
-
-					throw "There was a problem with updateUser() : " + jsonData['message'];
-					return false;
-				} else {
-					
-					return jsonData;
-				}
+				console.log(response);
+				return jsonData;
 			},
 			error: function(xhr, status, error) {
 
@@ -88,5 +79,6 @@ var Db = (function() {
 	return {
 		find:find,
 		makeUser:makeUser,
+		updateUser:updateUser
 	};
 })();

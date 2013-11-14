@@ -2,5 +2,5 @@
  * Global config settings
  */
  var CONFIG = {
- 	Dir : 'http://localhost/coms319/CS319Group8/',
- }
+	Dir : 'http://localhost/se319project/CS319Group8/',
+ };
