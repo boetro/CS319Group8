@@ -12,7 +12,7 @@
 	
 	<?php
 		session_start();
-		if(isset($_SESSION['gamertag']) && isset($_SESSION['theme_color'])){
+		if(isset($_SESSION['gamertag']) && isset($_SESSION['theme_color']) && isset($_SESSION['id'])){
 			echo '<body style="background-color:' . $_SESSION['theme_color'] . ';">';
 		}else{
 			header("Location: login.php");

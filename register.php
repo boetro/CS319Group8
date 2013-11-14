@@ -19,10 +19,10 @@
 				Register
 			</h1><br>
 			
-			<form role="form" action="./php/scripts/registeruser.php" method="POST">
+			<form role="form" action="./php/scripts/addplayer.php" method="POST">
 				<div class="form-group">
 					<label for="username">Username</label>
-					<input type="text" name = "username" class="form-control" id="username" placeholder="Username">
+					<input type="text" name = "gamertag" class="form-control" id="username" placeholder="Username">
 				</div>
 				<div class="form-group">
 					<label for="email">Email Address</label>
@@ -38,7 +38,7 @@
 				</div>
 				<button type="submit" class="btn btn-default">Sign up</button>
 			</form><br>
-			<a href="./login.html">Back</a>
+			<a href="./login.php">Back</a>
 		</div>
 	</body>
 </html>

@@ -30,6 +30,7 @@
 		if(Util::verifyPass($row['pass_hash'], $password, $username))
 		{
 			session_start();
+			$_SESSION['id'] = $row['id'];
 			$_SESSION['gamertag'] = $username;
 			$_SESSION['theme_color'] = $row['theme_color'];
 			header('Location: ../../main.php');

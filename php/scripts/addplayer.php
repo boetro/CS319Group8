@@ -11,21 +11,23 @@
 
 	try 
 	{
-		$player = new Player($_POST['email'], $_POST['password'], $_POST['gamertag'], $_POST['theme_color']);
+		$player = new Player($_POST['email'], $_POST['password'], $_POST['gamertag'], 'rgb(255, 255, 255)');
 		$player->push();
 
-		$example['before'] = $player->serialize();
+		$example['player'] = $player->serialize();
 
-		$player->email = 'hrrehg@iastate.edu';
-		$player->push();
-
-		$example['after'] = $player->serialize();
+		session_start();
+		$_SESSION['gamertag'] = $player->__get('gamertag');
+		$_SESSION['theme_color'] = $player->__get('theme_color');
+		$_SESSION['id'] = $player->__get('id');
 		echo json_encode($example);
+		header('Location: ../../main.php');
 	} 
 	catch(Exception $e) 
 	{
-		return json_encode(array(
-			'error' => true,
-			'message' => $e->getMessage(),
-		));
+		header('Location: ../../register.php');
+		// return json_encode(array(
+		// 	'error' => true,
+		// 	'message' => $e->getMessage(),
+		// ));
 	}
