@@ -19,6 +19,22 @@
 				"pass_hash",
 				"email"
 			),		
+			"game" => array(
+				"id",
+				"player1_id",
+				"player2_id",
+				"total_moves",
+				"turn",
+				"board"
+			),
+			"chat_log" => array(
+				"id",
+				"sender_id",
+				"game_id",
+				"message",
+				"created_at",
+				"pretty_time"
+			)
 		);
 
 		/**
@@ -53,6 +69,9 @@
 			$results = $select->fetchAll(PDO::FETCH_CLASS);
 			if(!count($results))
 				return false; 
+
+			if(sizeof($results) == 1)
+				$results = $results[0];
 
 			return $results;
 		}

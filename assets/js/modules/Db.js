@@ -15,22 +15,7 @@ var Db = (function() {
 		return $.ajax({
 			url: CONFIG.Dir + 'php/scripts/find.php',
 			type: 'POST',
-			data: {value : value, column : column, table : table},
-			success: function(response) {
-
-				var jsonData = $.parseJSON(response);
-				
-				if(jsonData['error']) {
-					
-					throw "There was a problem with find() : " + jsonData['message'];
-				} else {
-
-					return jsonData;
-				}
-			},
-			error: function(xhr, status, error) {
-				
-			}
+			data: {value : value, column : column, table : table}
 		});
 	};
 
@@ -39,22 +24,7 @@ var Db = (function() {
 		return $.ajax({
 			url: CONFIG.Dir + 'php/scripts/addplayer.php',
 			type: 'POST',
-			data: {email : email, password : password, gamertag : gamertag, theme_color : theme_color},
-			success: function(response) {
-
-				var jsonData = $.parseJSON(response);
-
-				if(jsonData['error']) {
-
-					throw "There was a problem with makeUser() : " + jsonData['message'];
-				} else {
-					
-					return jsonData;
-				}
-			},
-			error: function(xhr, status, error) {
-
-			}
+			data: {email : email, password : password, gamertag : gamertag, theme_color : theme_color}
 		});
 	};
 
@@ -63,22 +33,25 @@ var Db = (function() {
 		return $.ajax({
 			url: CONFIG.Dir + 'php/scripts/updatePlayer.php',
 			type: 'POST',
-			data: {column : column, value : value},
-			success: function(response) {
-				console.log(response);
-				var jsonData = $.parseJSON(response);
-				console.log(response);
-				return jsonData;
-			},
-			error: function(xhr, status, error) {
-
-			}
+			data: {column : column, value : value}
 		});
 	};
+
+	var makeGame = function(player1, player2, totalMoves, turn) {
+		console.log("creating a game with totalMoves : " + totalMoves);
+		console.log("creating a game with turn : " + turn);
+
+		return $.ajax({
+			url: CONFIG.Dir + 'php/scripts/addgame.php',
+			type: 'POST',
+			data: {player1 : player1, player2 : player2, totalMoves : totalMoves, turn : turn}
+		});
+	}
 
 	return {
 		find:find,
 		makeUser:makeUser,
-		updateUser:updateUser
+		updateUser:updateUser,
+		makeGame:makeGame
 	};
 })();

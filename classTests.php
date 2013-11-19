@@ -10,8 +10,9 @@
 <body>
 	
 	<script>
+
 		// value, column, table
-		var findPromise = Db.find('holdenrehg@gmail.com', 'awpdokawdpok', 'player');
+		var findPromise = Db.find('poop@poo.com', 'email', 'player');
 		
 		// after your promise resolves
 		findPromise.done(function(result) {
@@ -32,6 +33,20 @@
 				console.log('Could not make user');
 			}
 		});*/
+
+		var makeGamePromise = Db.makeGame(64, 65, 5, 5);
+
+		makeGamePromise.success(function(response) {
+			var jsonData = $.parseJSON(response);
+			jsonData.game = $.parseJSON(jsonData.game);
+			
+			console.log(jsonData.game.player1);
+			jsonData.game.player1 = $.parseJSON(jsonData.game.player1);
+			jsonData.game.player2 = $.parseJSON(jsonData.game.player2);
+			jsonData.game.board = $.parseJSON(jsonData.game.board);
+
+			console.log(jsonData);
+		});
 	</script>
 </body>
 </html>

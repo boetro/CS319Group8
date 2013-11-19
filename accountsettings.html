@@ -41,7 +41,7 @@ $(document).ready(function() {
 		var json = Db.updateUser(bgColor, "theme_color");
 		json.done(function(result) {
 			console.log(json);
-			if(json['error'] == true){
+			if(json['error'] === true){
 				$("#error").show();
 				$("#error").text("Error saving back ground color please try again later");
 			}

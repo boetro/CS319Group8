@@ -1,6 +1,6 @@
 <?php
 
-class Chat 
+class Message 
 {
 
 	private $sender;

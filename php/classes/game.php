@@ -60,6 +60,18 @@
         return false;
     }
 
+    public function serialize()
+    {
+      return json_encode(array(
+        'id' => $this->id,
+        'player1' => Player::unserialize($this->players[0])->serialize(),
+        'player2' => Player::unserialize($this->players[1])->serialize(),
+        'totalMoves' => $this->totalMoves,
+        'turn' => $this->turn,
+        'board' => $this->serializeBoard()
+      ));
+    }
+
     public function push() 
     {
       $socket = new Connect();
@@ -72,7 +84,7 @@
       {
         // create a new game in the database
         $add = $con->prepare($addStmt);
-        if( !$add->execute(array(':player1' => $this->players[0]->id, ':player2' => $this->players[1]->id, ':total_moves' => $this->total_moves, ':turn' => $this->turn, ':board' => $this->board))) 
+        if( !$add->execute(array(':player1' => $this->players[0]->id, ':player2' => $this->players[1]->id, ':total_moves' => $this->totalMoves, ':turn' => $this->turn, ':board' => $this->serializeBoard()))) 
           throw new Exception("Could not add new Player to the database in push function.");
 
         $this->created_at = date('Y-m-d H:i:s');
@@ -82,10 +94,10 @@
       else 
       {
         // update current player
-        $current = Db::find($this->id, 'id', 'player');
+        $current = Db::find($this->id, 'id', 'game');
 
         $update = $con->prepare($updateStmt);
-        if(!$update->execute(array(':email' => $this->email, ':pass_hash' => $this->pass_hash, ':gamertag' => $this->gamertag, ':theme_color' => $this->theme_color, ':id' => $this->id))) 
+        if(!$update->execute(array(':player1' => $this->players[0]->id, ':player2' => $this->players[1]->id, ':total_moves' => $this->total_moves, ':turn' => $this->turn, ':board' => $this->serializeBoard(), ':id' => $this->id))) 
           throw new Exception();
       }
     }
@@ -94,27 +106,36 @@
     {
       $jsonBoard = array(array());
 
-      foreach($this->board as $key => $row)
+      for($y = 0; $y < 12; $y+=1)
       {
         $row = array();
-
-        foreach ($row as $space => $object) 
+        
+        for($x = 0; $x < 8; $x+=1) 
         {
-          array_push($row, serialize($space))    
+          //BoardSpace::unserialize($this->board[$y][$x]);
+          array_push($row, BoardSpace::unserialize($this->board[$y][$x])->serialize());    
         }
 
         array_push($jsonBoard, $row);
       }
 
-      return $jsonBoard;
+      // first is always empty, so remove it
+      array_shift($jsonBoard);
+      return json_encode($jsonBoard);
     }
 
     /**
      * Initialize the board with BoardSpace's 
      **/
-    private function makeBlankBoard() {
-      
-      // TODO
+    private function makeBlankBoard() 
+    {
+      for($y = 0; $y < 12; $y+=1)
+      {
+        for($x = 0; $x < 8; $x+=1)
+        {
+          $this->board[$y][$x] = new BoardSpace();
+        }
+      }
     }
   }
 

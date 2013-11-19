@@ -5,7 +5,7 @@
 	require 'util.php';
 	require_once 'connect.php';
 
-	class Player implements Serializable
+	class Player
 	{
 		private $table = 'player';
 		
@@ -41,12 +41,22 @@
 		 **/
 		private $theme_color;
 		
-		public function __construct($email, $password, $gamertag, $theme_color)
+		public function __construct($email, $password, $gamertag, $theme_color, $id = null, $created_at = null)
 		{
-			$pass_hash = Util::makePassHash($password, $gamertag);
+			if(is_null($id)) 
+			{
+				$pass_hash = Util::makePassHash($password, $gamertag);
+			}
+			else 
+			{
+				// the player already exists
+				// TODO error checking that this id actually exists
+				$this->id = $id;
+				$this->pass_hash = $password;
+				$this->created_at = $created_at;
+			}
 
 			$this->email = $email;
-			$this->pass_hash = $pass_hash;
 			$this->gamertag = $gamertag;
 			$this->theme_color = $theme_color;
 		}
@@ -113,8 +123,8 @@
 		 */
 		public function __set($property, $value) 
 		{	
-			if($property == 'id')
-				throw new Exception("Please do not try to alter the id of the player.");
+			// if($property == 'id')
+			// 	throw new Exception("Please do not try to alter the id of the player.");
 
 			if (property_exists($this, $property)) 
 			{
@@ -137,15 +147,15 @@
 	    	));
 	    }
 	    
-	    public function unserialize($data) 
+	    public static function unserialize($obj) 
 	    {
-	    	$data = json_decode($data);
-
-	    	$this->id = $data['id'];
-	    	$this->email = $data['email'];
-	    	$this->pass_hash = $data['pass_hash'];
-	    	$this->gamertag = $data['gamertag'];
-	    	$this->theme_color = $data['theme_color'];
-	    	$this->created_at = $data['created_at'];
+	    	if(is_object($obj) && property_exists($obj, 'email')) {
+		    	$data = json_decode($data);
+		    	$newPlayer = new Player($obj->email, $obj->pass_hash, $obj->gamertag, $obj->theme_color, $obj->id, $obj->created_at);
+		    	
+		    	return $newPlayer;
+	    	} else {
+	    		return false;
+	    	}
 	    }
 	}

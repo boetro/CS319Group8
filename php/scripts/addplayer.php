@@ -7,20 +7,20 @@
 	 */
 	require '../classes/player.php';
 
-	$example = array();
-
 	try 
 	{
 		$player = new Player($_POST['email'], $_POST['password'], $_POST['gamertag'], 'rgb(255, 255, 255)');
 		$player->push();
-
-		$example['player'] = $player->serialize();
-
+		
 		session_start();
 		$_SESSION['gamertag'] = $player->__get('gamertag');
 		$_SESSION['theme_color'] = $player->__get('theme_color');
 		$_SESSION['id'] = $player->__get('id');
-		echo json_encode($example);
+
+		echo json_encode(array(
+			'player' => $player->serialize()
+		));
+		
 		header('Location: ../../main.php');
 	} 
 	catch(Exception $e) 
