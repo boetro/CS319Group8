@@ -2,6 +2,9 @@
 
 	require 'connect.php';
 
+	/**
+	 * Class that models the functionality of te javascript database module
+	 */
 	class Db 
 	{
 		/**

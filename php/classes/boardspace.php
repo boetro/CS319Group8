@@ -1,5 +1,14 @@
 <?php
   
+  // cards enum
+  class Cards 
+  {
+    const OneOfHearts = '1h';
+    const OneOfClubs = '1c';
+    const OneOfDiamonds = '1d';
+    const OneOfSpades = '1s';
+  }
+
   class BoardSpace implements Serializable
   {
     

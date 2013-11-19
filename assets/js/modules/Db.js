@@ -13,7 +13,7 @@ var Db = (function() {
 	var find = function(value, column, table) {
 		
 		return $.ajax({
-			url: CONFIG.Dir + 'php/scripts/test.php',
+			url: CONFIG.Dir + 'php/scripts/find.php',
 			type: 'POST',
 			data: {value : value, column : column, table : table},
 			success: function(response) {
