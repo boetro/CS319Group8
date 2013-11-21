@@ -47,6 +47,12 @@
 
 			console.log(jsonData);
 		});
+
+		var findGamePromise = Db.find('1', 'id', 'game');
+
+		findGamePromise.success(function(result) {
+			console.log($.parseJSON(result));
+		});
 	</script>
 </body>
 </html>

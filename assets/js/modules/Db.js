@@ -48,6 +48,10 @@ var Db = (function() {
 		});
 	}
 
+	var updateGame = function() {
+		
+	}
+
 	return {
 		find:find,
 		makeUser:makeUser,

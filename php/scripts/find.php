@@ -4,8 +4,8 @@
 
 	try 
 	{
-		$playerData = Db::find($_POST['value'], $_POST['column'], $_POST['table']);
-		echo json_encode($playerData);
+		$data = Db::find($_POST['value'], $_POST['column'], $_POST['table']);
+		echo json_encode($data);
 	}
 	catch(Exception $e) {
 		echo json_encode(array(
