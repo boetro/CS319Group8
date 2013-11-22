@@ -9,7 +9,6 @@
  */
 var Db = (function() {
 	
-	/* example 'public' function */
 	var find = function(value, column, table) {
 		
 		return $.ajax({
@@ -46,11 +45,16 @@ var Db = (function() {
 			type: 'POST',
 			data: {player1 : player1, player2 : player2, totalMoves : totalMoves, turn : turn}
 		});
-	}
+	};
 
-	var updateGame = function() {
-		
-	}
+	/**
+	 *
+	 * @param {number} id 
+	 * @param {2d array} board represents 12 x 8 BoardSpace Objects (card value, hasChip, chipColor)
+	 */
+	var updateGame = function(id, board, player1, player2, totalMoves, turn) {
+		console.log("updating game...");
+	};
 
 	return {
 		find:find,

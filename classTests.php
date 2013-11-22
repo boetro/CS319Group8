@@ -6,6 +6,7 @@
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	<script src="assets/js/config.js"></script>
 	<script src="assets/js/modules/Db.js"></script>
+	<script src="assets/js/modules/Util.js"></script>
 </head>
 <body>
 	
@@ -34,7 +35,7 @@
 			}
 		});*/
 
-		var makeGamePromise = Db.makeGame(64, 65, 5, 5);
+		/*var makeGamePromise = Db.makeGame(64, 65, 5, 5);
 
 		makeGamePromise.success(function(response) {
 			var jsonData = $.parseJSON(response);
@@ -46,12 +47,17 @@
 			jsonData.game.board = $.parseJSON(jsonData.game.board);
 
 			console.log(jsonData);
-		});
+		});*/
 
-		var findGamePromise = Db.find('1', 'id', 'game');
+		var findGamePromise = Db.find('10', 'id', 'game');
 
 		findGamePromise.success(function(result) {
-			console.log($.parseJSON(result));
+			var game = $.parseJSON(result);
+			console.log(game);
+
+			var board = $.parseJSON(game.board);
+			Util.arrayToJson(board);
+			console.log(board);
 		});
 	</script>
 </body>
