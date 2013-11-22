@@ -155,46 +155,49 @@
 				doDrawCard();
 				doDrawCard();
 				
+				var clickedCard = {};
+				
 				$(document).on('click', '#yourHand > .playingCard', function(card) { 
 
-					var className = card.currentTarget.className.split(" ");
-					className = "." + className.join(".");
-					if ($(className + ' .front').css("background-color") === "rgb(153, 255, 153)") {
-						$(className + ' .front').css("background-color", "#fff");
-					}else{
-						$(".playingCard .front").not( $(".occupied") ).css("background-color", "rgb(255, 255, 255)");
-						$(className + ' .front').css("background-color", "rgb(153, 255, 153)");
+					var classNameOriginal = card.currentTarget.className;
+					var className = "." + classNameOriginal.split(" ").join(".");
+					if ($(className + ' .front').not( ".occupied" ).css("background-color") === "rgb(153, 255, 153)") {
+						$(className + ' .front').not( ".occupied" ).css("background-color", "#fff");
+						clickedCard = {};
+					} else {
+						$(".playingCard .front").not( ".occupied" ).css("background-color", "rgb(255, 255, 255)");
+						$(className + ' .front').not( ".occupied" ).css("background-color", "rgb(153, 255, 153)");
+						clickedCard = {
+							card : classNameOriginal,
+							id : $(this).attr("id")
+						};
 					}
-
+					console.log(clickedCard);
 				});
 
 				$("#gameBoard > .playingCard").click(function(card){
 
-					if($(" .front", this).css("background-color") === "rgb(153, 255, 153)"){
-
-						if (!hand.length) {
-							showError('Your hand is empty');
-							return;
-						}
-						var className = card.currentTarget.className.split(" ");
-						className = "." + className.join(".");
-						$(className).each(function (index) {
-							if($(this).is('[id]')){
-								var c = this.id;
-								var index = parseInt(c.charAt(4));
-								showHand();
-								
-								clickedElement = hand[index];
-								hand.splice(index, 1);
-								
+					// if the game board card you clicked on is light green
+					if ($(".front", this).css("background-color") === "rgb(153, 255, 153)") {
+						var classNameOriginal = card.currentTarget.className;
+						var className = "." + classNameOriginal.split(" ").join(".");
+						$("#yourHand > " + className).each(function () {
+							console.log(className);
+							if ($(this).attr('id') === clickedCard.id) {
+								console.log('asdf');
+								clickedElement = hand[$(this).attr('id').charAt(4)];
+								hand.splice($(this).attr('id').charAt(4), 1);
 								showHand();
 								var discard = $('#discard');
 								discard.html('');
 								discard.html(clickedElement.getHTML());
+								$("#discard > .playingCard > .front").addClass('occupied');
 								doDrawCard();
-								$(".playingCard .front").not( $(".occupied" ) ).css("background-color", "rgb(255, 255, 255)");
+								$(".playingCard .front").not( $(".occupied") ).css("background-color", "rgb(255, 255, 255)");
 							}
 						})
+						
+						
 						$(" .front", this).css("background-color", "rgb(92, 133, 255)");
 						//rgb(255, 169, 113) Opponents color
 						$(" .front", this).addClass('occupied');
