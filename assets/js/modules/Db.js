@@ -54,12 +54,18 @@ var Db = (function() {
 	 */
 	var updateGame = function(id, board, player1, player2, totalMoves, turn) {
 		console.log("updating game...");
+		return $.ajax({
+			url: CONFIG.Dir + 'php/scripts/updategame.php',
+			type: 'POST',
+			data: {id: id, board: board, player1 : player1, player2 : player2, totalMoves : totalMoves, turn: turn}
+		});
 	};
 
 	return {
 		find:find,
 		makeUser:makeUser,
 		updateUser:updateUser,
+		updateGame:updateGame,
 		makeGame:makeGame
 	};
 })();

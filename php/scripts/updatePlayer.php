@@ -8,6 +8,7 @@
 
 	session_start();	
 
+	// FIXME
 	$update = $con->prepare("UPDATE player SET " . $_POST["column"] . " = '".$_POST["value"]."' WHERE gamertag = '" . $_SESSION["gamertag"]. "';");
 	if(!$update->execute()) 
 	{

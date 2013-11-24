@@ -12,13 +12,15 @@
     private $players = array();
     private $totalMoves;
     private $turn;
+    private $created_at;
   
-    public function __construct($players, $totalMoves, $turn) 
+    public function __construct($players, $totalMoves, $turn, $id = null, $board = null, $created_at = null) 
     {  
       if(!is_array($players)) 
         throw new Exception('players paramater must be an array');
         
-      $this->makeBlankBoard();
+      if(is_null($board)) 
+        $this->makeBlankBoard();
 
       $this->players = $players;
       $this->totalMoves = $totalMoves;
@@ -58,18 +60,6 @@
         }
 
         return false;
-    }
-
-    public function serialize()
-    {
-      return json_encode(array(
-        'id' => $this->id,
-        'player1' => Player::unserialize($this->players[0])->serialize(),
-        'player2' => Player::unserialize($this->players[1])->serialize(),
-        'totalMoves' => $this->totalMoves,
-        'turn' => $this->turn,
-        'board' => $this->serializeBoard()
-      ));
     }
 
     public function push() 
@@ -137,6 +127,45 @@
         }
       }
     }
+
+    public function serialize()
+    {
+      return json_encode(array(
+        'id' => $this->id,
+        'player1' => Player::unserialize($this->players[0])->serialize(),
+        'player2' => Player::unserialize($this->players[1])->serialize(),
+        'totalMoves' => $this->totalMoves,
+        'turn' => $this->turn,
+        'board' => $this->serializeBoard()
+      ));
+    }
+
+    // TODO
+    /*public static function unserialize($obj)
+    {
+      if(is_object($obj) && property_exists($obj, 'board')) 
+      {
+        $data = json_decode($data);
+        //$newPlayer = new Player($obj->email, $obj->pass_hash, $obj->gamertag, $obj->theme_color, $obj->id, $obj->created_at);
+        $newGame = new Game(
+          array(
+            $obj->player1,
+            $obj->player2
+          ),
+          $obj->totalMoves,
+          $obj->turn,
+          $obj->id,
+          $obj->board,
+          $obj->created_at
+        );
+
+        return $newPlayer;
+      } 
+      else 
+      {
+        return false;
+      }
+    }*/
   }
 
 ?>

@@ -135,6 +135,11 @@
 		    return false;
 		}
 
+		/**
+		 * Serializes the current obj into a json encoded array
+		 *
+		 * @return json encoded array
+		 */
 		public function serialize() 
 		{
 	    	return json_encode(array(
@@ -147,14 +152,23 @@
 	    	));
 	    }
 	    
+	    /**
+	     * Static function that accepts a standard object and returns a Game object with the same information
+		 * 
+		 * @param obj
+		 * @return Game object
+	     */
 	    public static function unserialize($obj) 
 	    {
-	    	if(is_object($obj) && property_exists($obj, 'email')) {
+	    	if(is_object($obj) && property_exists($obj, 'email')) 
+	    	{
 		    	$data = json_decode($data);
 		    	$newPlayer = new Player($obj->email, $obj->pass_hash, $obj->gamertag, $obj->theme_color, $obj->id, $obj->created_at);
 		    	
 		    	return $newPlayer;
-	    	} else {
+	    	} 
+	    	else 
+	    	{
 	    		return false;
 	    	}
 	    }
