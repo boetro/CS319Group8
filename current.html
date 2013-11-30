@@ -1,4 +1,43 @@
-<ul class="list-unstyled">
-	<li><a href="./continue.html">Game against gaben</a></li>
-	<li><a href="./continue.html">Game against sbasu</a></li>
-</ul>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#content').append('<div class="alert alert-success">Loading your games! Please wait.</div>');
+		var games = $.ajax({
+			url: "./php/scripts/load_games.php",
+			type: 'POST',
+			success: function() {}
+		});
+
+		games.done(function(result){
+			$('#content').empty();
+			if(result === "false"){
+				$('#content').append('<div class="alert alert-warning">No games found.</div>');
+			}
+			else{
+				var data = $.parseJSON(result);
+				if(data['error']){
+					$('#content').append('<div class="alert alert-warning">No games found.</div>');
+				}
+				else{
+					var html = '<ul class="list-group">';
+					for(var i = 0; i < data.length; ++i){
+						html +=  '<li class="list-group-item"><div style="cursor: pointer" id="' + data[i]['id'] +'" class="panel panel-default loadedGame"><div class="panel-heading"><h3 class="panel-title">Game Against: '+ data[i]['opponent'] +'</h3></div><div class="panel-body">Total Moves: '+ data[i]['total_moves'] +'</div></div></li>';
+					}
+					html += '</ul>';
+					$('#content').append(html);
+
+				}
+			}
+		})
+	$(document).on('click', '.loadedGame', function() {
+			$('#content').empty();
+			$.ajax({
+				url: './gameboard.php',
+				type: 'POST',
+				data: {id : $(this).attr('id')},
+				success: function() {}
+			}).done(function(html) {
+				$("#board").html(html);
+			});
+		})
+	});
+</script>

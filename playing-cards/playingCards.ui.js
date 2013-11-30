@@ -138,7 +138,7 @@
             }
             return [
             '<div class="suit A1">', this.suitCode, '</div>',
-            '<img class="suit ', this.rank, ' face" src="', imgPrefix, 'img/', this.rank, n, '.gif"/>',
+            '<img class="suit ', this.rank, ' face" src="', imgPrefix, './playing-cards/img/', this.rank, n, '.gif"/>',
             '<div class="suit C5 flip">', this.suitCode, '</div>'
             ];
         }

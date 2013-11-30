@@ -4,6 +4,7 @@
 		<title>Sequence</title>
 		<meta charset="utf-8">
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" media="all" href="./playing-cards/playingCards.ui.css"/>
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="./assets/js/scripts/PageLoad.js" type="text/JavaScript"></script>
@@ -51,5 +52,6 @@
 				Welcome to Sequence!
 			</div>
 		</div>
+		<div id="board"></div>
 	</body>
 </html>

@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	$('#new').on('click', function(event) {
+		$("#board").html('');
 		$.ajax({
 			url: 'new.html',
 			type: 'POST',
@@ -10,6 +11,7 @@ $(document).ready(function() {
 		event.preventDefault;
 	});
 	$('#current').on('click', function(event) {
+		$("#board").html('');
 		$.ajax({
 			url: 'current.html',
 			type: 'POST',
@@ -20,6 +22,7 @@ $(document).ready(function() {
 		event.preventDefault;
 	});
 	$('#highScores').on('click', function(event) {
+		$("#board").html('');
 		$.ajax({
 			url: 'highscores.html',
 			type: 'POST',
@@ -30,6 +33,7 @@ $(document).ready(function() {
 		event.preventDefault;
 	});
 	$('#help').on('click', function(event) {
+		$("#board").html('');
 		$.ajax({
 			url: 'help.html',
 			type: 'POST',
@@ -40,6 +44,7 @@ $(document).ready(function() {
 		event.preventDefault;
 	});
 	$('#settings').on('click', function(event) {
+		$("#board").html('');
 		$.ajax({
 			url: 'accountsettings.html',
 			type: 'POST',
