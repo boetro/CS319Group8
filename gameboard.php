@@ -1,10 +1,8 @@
-<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <div class="container">		
 	<?php 
 		echo "Game id is stored in post: " . $_POST['id'];
 	?>
-	<div class="row" style="background-color:mistyrose;">
+	<div class="row">
 		<div class="col-md-10 game">
 			<div id="gameBoard"></div>
 		</div>
@@ -37,7 +35,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" style="background-color:paleturquoise;">
+	<div class="row" style="margin-bottom: 10px;">
 		<div class="col-md-6">
 			<h2>Your Hand</h2>
 			<div id="yourHand"></div>
