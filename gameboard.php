@@ -20,7 +20,7 @@
 			</div>
 			<div id="score">
 				<h4>Sequences</h4>
-				<div>You: 0</div>
+				<div>You: <span id="yourScore">0</div>
 				<div>Opp: 0</div>
 			</div>
 			<div id="chat">

@@ -6,6 +6,8 @@ $(document).ready(function() {
 	var chats = [];           // Array of chat messages
 	var gameBoard = [];       // Array representing board state
 	var hand = [];            // Array of playing cards
+	var yourScore = 0;
+	var theirScore = 0;
 	
 	var BACKGROUNDCOLORS = {  // Enum representing the state of a board space
 		FREE : 0,     // Open space
@@ -151,9 +153,12 @@ $(document).ready(function() {
 		});
 		
 		// Check for sequences
+		var numSequence = 0;
 		for (var i = 0; i < gameBoard.length; i++) {
+			
 			if (gameBoard[i] === BACKGROUNDCOLORS.YOURS) {
-				if ( i % 12 < 8 ) {  // Check for horizontal right sequence
+				if ( i % 12 < 8 ) {
+					// Check for horizontal right sequence
 					if ((gameBoard[i + 1] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 1] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 2] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 2] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 3] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 3] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -163,9 +168,11 @@ $(document).ready(function() {
 						gameBoard[i + 2] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 3] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 4] = BACKGROUNDCOLORS.YOURSEQ;
+						numSequence++;
 					}
 					
-					if (i < 44) {  // Check for diagonal down/right sequence
+					if (i < 44) {
+						// Check for diagonal down/right sequence
 						if ((gameBoard[i + 13] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 13] === BACKGROUNDCOLORS.YOURSEQ) &&
 								(gameBoard[i + 26] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 26] === BACKGROUNDCOLORS.YOURSEQ) &&
 								(gameBoard[i + 39] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 39] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -175,10 +182,12 @@ $(document).ready(function() {
 							gameBoard[i + 26] = BACKGROUNDCOLORS.YOURSEQ;
 							gameBoard[i + 39] = BACKGROUNDCOLORS.YOURSEQ;
 							gameBoard[i + 52] = BACKGROUNDCOLORS.YOURSEQ;
+							numSequence++;
 						}
 					}
 				}
-				if ( i % 12 > 3 && i < 48 ) {  // Check for diagonal down/left sequence
+				if ( i % 12 > 3 && i < 48 ) {
+					// Check for diagonal down/left sequence
 					if ((gameBoard[i + 11] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 11] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 22] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 22] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 33] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 33] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -188,9 +197,11 @@ $(document).ready(function() {
 						gameBoard[i + 22] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 33] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 44] = BACKGROUNDCOLORS.YOURSEQ;
+						numSequence++;
 					}
 				}
-				if (i < 48) {  // Check for down sequence
+				if (i < 48) {
+					// Check for down sequence
 					if ((gameBoard[i + 12] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 12] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 24] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 24] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 36] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 36] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -200,9 +211,12 @@ $(document).ready(function() {
 						gameBoard[i + 24] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 36] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 48] = BACKGROUNDCOLORS.YOURSEQ;
+						numSequence++;
 					}
 				}
 			}
+			yourScore = numSequence;
+			$("#yourScore").html(yourScore);
 		}
 	});
 	
