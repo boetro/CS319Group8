@@ -45,7 +45,7 @@
 		{
 			if(is_null($id)) 
 			{
-				$pass_hash = Util::makePassHash($password, $gamertag);
+				$this->pass_hash = Util::makePassHash($password, $gamertag);
 			}
 			else 
 			{

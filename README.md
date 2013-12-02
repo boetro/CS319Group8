@@ -1,5 +1,8 @@
 # SEQUENCE
 
+### Live Site
+http://proj-319-08.cs.iastate.edu
+
 ### Sequence Game
 https://en.wikipedia.org/wiki/Sequence_(game)
 
@@ -42,6 +45,10 @@ Our target audience is smart phone, tablet, and desktop users who enjoy playing 
 - SQL
 - JavaScript
 - jQuery
+
+### Test Users
+username : testing
+passwrod : testing
 
 ### Timeline
 

@@ -27,6 +27,12 @@
 	} 
 	catch(Exception $e) 
 	{
+		/*echo '<pre>';
+		print_r($e);
+		echo '</pre>';
+		exit();*/
+		
+		// TODO, make this work off ajax call
 		header('Location: ../../register.php');
 		// return json_encode(array(
 		// 	'error' => true,
