@@ -1,97 +1,101 @@
 $(document).ready(function() {
 
 	$("#messageForm").width($("#chatbox").outerWidth());
-	// Array of chat messages
-	var timestamps = [];
-	var chats = [];
-	// TODO: load chats from database
 	
-	// Array representing board state
-	var gameBoard = [];
-	var BACKGROUNDCOLORS = {
-		FREE : 0,
-		YOURS : 1,
-		YOURSEQ : 2,
-		THEIRS : 3,
-		THEIRSEQ : 4
+	var timestamps = [];      // Array of chat timestamps
+	var chats = [];           // Array of chat messages
+	var gameBoard = [];       // Array representing board state
+	var hand = [];            // Array of playing cards
+	
+	var BACKGROUNDCOLORS = {  // Enum representing the state of a board space
+		FREE : 0,     // Open space
+		YOURS : 1,    // Taken by one of your moves, but not part of a sequence
+		YOURSEQ : 2,  // Taken by one of your moves and part of a sequence
+		THEIRS : 3,   // Taken by an opponent's move, but not part of a sequence
+		THEIRSEQ : 4  // Taken by an opponent's move and part of a sequence
 	};
+	
+	// TODO: load chats from database
 	// TODO: load board state from database
-
+	
+	// Create a new deck of cards to be displayed as the game board
 	var cardDeck = $('#gameBoard').playingCards();
+	// Spread the deck to display the card faces (spread lays out a deck in the pattern of a Sequence game board)
 	cardDeck.spread();
 	
-	// Array of playing cards
-	var hand = [];
+	// Create a new deck of cards to draw from
+	var drawDeck = new playingCards();
+	// Shuffle the deck
+	drawDeck.shuffle();
 	
+	// Variable to track which card was most recently clicked
+	var clickedCard = {};
+	
+	
+	
+	// Give the user feedback if the game tried to do something it couldn't
 	var showError = function(msg) {
 		$('#error').html(msg).show();
 		setTimeout(function() { $('#error').fadeOut('slow'); }, 1000);
 	};
 	
+	// Display the cards in the player's hand by using the hand array to generate card html
 	var showHand = function() {
+		// Select the yourHand div and clear its html
 		var el = $('#yourHand');
 		el.html('');
+		
+		// Loop through the hand array, appending the respective card html to the yourHand div
 		for (var i = 0; i < hand.length; i++) {
 			el.append(hand[i].getHTML());
 		}
+		
+		// Give each card element in a user's hand an id
+		// Possible values are hand0, hand1, hand2, hand3, hand4, hand5
+		// The id is used when cards are played from the hand to determine which card was played
 		$('#yourHand > .playingCard').each(function(index) {
 			$(this).attr('id', 'hand' + index);
 		});
 	};
 	
+	// Shuffle the deck
 	var doShuffle = function() {
 		cardDeck.shuffle();
-		cardDeck.spread();
 	};
 	
+	// Draw a new card
 	var doDrawCard = function() {
 		if (hand.length == 6) {
 			showError('Your hand is full');
 			return;
 		}
+		
 		var c = drawDeck.draw();
+		
 		if (!c) {
 			showError('No more cards');
 			return;
 		}
+		
 		hand.splice(hand.length, 0, c);
 		showHand();
 	};
 	
-	$('#shuffler').click(doShuffle);
-	
-	$('#draw').click(doDrawCard);
-	
-	$('#shuffleDraw').click(function() {
-		doShuffle();
-		doDrawCard();
-	});
-	
-	$('#addCard').click(function() {
-		if (!hand.length) {
-			showError('Your hand is empty');
-			return;
-		}
-		var c = hand.pop();
-		showHand();
-		drawDeck.addCard(c);
-	});
-	
-	var drawDeck = new playingCards();
-	drawDeck.shuffle();
+	// Draw 6 cards to fill the player's hand
 	doDrawCard();
 	doDrawCard();
-		doDrawCard();
+	doDrawCard();
 	doDrawCard();
 	doDrawCard();
 	doDrawCard();
 	
-	var clickedCard = {};
-	
+	// Bind a click listener to cards in a player's hand
+	// This listener toggles the highlighting of cards in a player's hand and on the game board
+	// When a user clicks a card in their hand, it becomes highlighted along with all open spots on the game board that match
 	$(document).on('click', '#yourHand > .playingCard', function(card) {
-
 		var classNameOriginal = card.currentTarget.className;
 		var className = "." + classNameOriginal.split(" ").join(".");
+		
 		if ($(className + ' .front').not( ".occupied" ).css("background-color") === "rgb(153, 255, 153)") {
 			$(className + ' .front').not( ".occupied" ).css("background-color", "#fff");
 			clickedCard = {};
@@ -104,13 +108,16 @@ $(document).ready(function() {
 			};
 		}
 	});
-
+	
+	// Click method for cards on the game board
+	// If a user clicks a highlighted card on the game board, they will put a chip on that space
+	// Reference: [ rgb(255, 169, 113) ] is the rgb value for the opponent's color
 	$("#gameBoard > .playingCard").click(function(card){
-
 		// if the game board card you clicked on is light green
 		if ($(".front", this).css("background-color") === "rgb(153, 255, 153)") {
 			var classNameOriginal = card.currentTarget.className;
 			var className = "." + classNameOriginal.split(" ").join(".");
+			
 			$("#yourHand > " + className).each(function () {
 				if ($(this).attr('id') === clickedCard.id) {
 					clickedElement = hand[$(this).attr('id').charAt(4)];
@@ -125,9 +132,8 @@ $(document).ready(function() {
 				}
 			});
 			
-			
 			$(" .front", this).css("background-color", "rgb(92, 133, 255)");
-			//rgb(255, 169, 113) Opponents color
+			
 			$(" .front", this).addClass('occupied');
 		}
 		
@@ -136,20 +142,18 @@ $(document).ready(function() {
 			if ("rgb(92, 133, 255)" === $(this).css("background-color")) {
 				gameBoard[index] = BACKGROUNDCOLORS.YOURS;
 			}
+			
 			if ("rgb(255, 169, 113)" === $(this).css("background-color")) {
 				gameBoard[index] = BACKGROUNDCOLORS.THEIRS;
-			}
-			else if ("rgb(255, 255, 255)" === $(this).css("background-color")) {
+			} else if ("rgb(255, 255, 255)" === $(this).css("background-color")) {
 				gameBoard[index] = BACKGROUNDCOLORS.FREE;
 			}
 		});
 		
 		// Check for sequences
 		for (var i = 0; i < gameBoard.length; i++) {
-			
 			if (gameBoard[i] === BACKGROUNDCOLORS.YOURS) {
-				if ( i % 12 < 8 ) {
-					// Check for horizontal right sequence
+				if ( i % 12 < 8 ) {  // Check for horizontal right sequence
 					if ((gameBoard[i + 1] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 1] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 2] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 2] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 3] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 3] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -161,8 +165,7 @@ $(document).ready(function() {
 						gameBoard[i + 4] = BACKGROUNDCOLORS.YOURSEQ;
 					}
 					
-					if (i < 44) {
-						// Check for diagonal down/right sequence
+					if (i < 44) {  // Check for diagonal down/right sequence
 						if ((gameBoard[i + 13] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 13] === BACKGROUNDCOLORS.YOURSEQ) &&
 								(gameBoard[i + 26] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 26] === BACKGROUNDCOLORS.YOURSEQ) &&
 								(gameBoard[i + 39] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 39] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -175,8 +178,7 @@ $(document).ready(function() {
 						}
 					}
 				}
-				if ( i % 12 > 3 && i < 48 ) {
-					// Check for diagonal down/left sequence
+				if ( i % 12 > 3 && i < 48 ) {  // Check for diagonal down/left sequence
 					if ((gameBoard[i + 11] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 11] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 22] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 22] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 33] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 33] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -188,8 +190,7 @@ $(document).ready(function() {
 						gameBoard[i + 44] = BACKGROUNDCOLORS.YOURSEQ;
 					}
 				}
-				if (i < 48) {
-					// Check for down sequence
+				if (i < 48) {  // Check for down sequence
 					if ((gameBoard[i + 12] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 12] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 24] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 24] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 36] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 36] === BACKGROUNDCOLORS.YOURSEQ) &&
@@ -205,6 +206,7 @@ $(document).ready(function() {
 		}
 	});
 	
+	// Chat
 	$("#send").click(function () {
 		var d = new Date();
 		timestamps[timestamps.length] = d.getInfo() + ' You:';
