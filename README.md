@@ -47,8 +47,8 @@ Our target audience is smart phone, tablet, and desktop users who enjoy playing 
 - jQuery
 
 ### Test Users
-username : testing
-passwrod : testing
+- username : testing
+- password : testing
 
 ### Timeline
 
