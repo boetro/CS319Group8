@@ -22,7 +22,7 @@
 	if(count($results) <= 0) 
 	{
 	 	echo 'didnt return from databse';
-	 	header('Location: ../../login.html');
+	 	header('Location: ../../index.php');
 	} 
 	else
 	{
@@ -37,7 +37,7 @@
 		}
 		else
 		{
-			header('Location: ../../login.php');
+			header('Location: ../../index.php');
 		}
 
 	}

@@ -16,7 +16,7 @@
 		if(isset($_SESSION['gamertag']) && isset($_SESSION['theme_color']) && isset($_SESSION['id'])){
 			echo '<body style="background-color:' . $_SESSION['theme_color'] . ';">';
 		}else{
-			header("Location: login.php");
+			header("Location: index.php");
 			die();
 			echo $_SESSION['gamertag'];
 		}
@@ -41,7 +41,7 @@
 							?>
 							<ul class="dropdown-menu">
 								<li><a id="settings" style="cursor: pointer">Account Settings</a></li>
-								<li><a href="./login.php">Log out</a></li>
+								<li><a href="./index.php">Log out</a></li>
 							</ul>
 						</li>
 					</ul>

@@ -38,7 +38,7 @@
 				</div>
 				<button type="submit" class="btn btn-default">Sign up</button>
 			</form><br>
-			<a href="./login.php">Back</a>
+			<a href="./index.php">Back</a>
 		</div>
 	</body>
 </html>

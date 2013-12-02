@@ -5,7 +5,7 @@
 
 		//script
 
-		header("Location: ../../login.html");
+		header("Location: ../../index.php");
 
 		ob_end_flush();
 
