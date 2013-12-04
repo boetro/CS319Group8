@@ -21,8 +21,8 @@
 
 	if(count($results) <= 0) 
 	{
-	 	echo 'didnt return from databse';
-	 	header('Location: ../../index.php');
+	 	echo json_encode(array('error' => true,
+								'message' => 'That sequence account does not exist. Enter a different username or <a href="./register.php">create a new account</a>.'));
 	} 
 	else
 	{
@@ -33,11 +33,13 @@
 			$_SESSION['id'] = $row['id'];
 			$_SESSION['gamertag'] = $username;
 			$_SESSION['theme_color'] = $row['theme_color'];
-			header('Location: ../../main.php');
+			echo json_encode(array('error' => false));
 		}
 		else
 		{
-			header('Location: ../../index.php');
+			echo json_encode(array('error' => true,
+									'message' => "Incorrect Password"));
+			//header('Location: ../../index.php');
 		}
 
 	}

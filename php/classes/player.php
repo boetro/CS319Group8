@@ -75,11 +75,9 @@
 
 			if(!isset($this->id)) 
 			{
-				// create a new player in the database
-				// TODO, error checking on values that already exist in the database
 				$duplicate = Db::find($this->gamertag, 'gamertag', 'player');
 				if($duplicate){
-					throw new Exception("Player already exists");
+					throw new Exception("Sorry that user already exists");
 				}
 				$add = $con->prepare($addStmt);
 				if( !$add->execute(array(':email' => $this->email, ':pass_hash' => $this->pass_hash, ':gamertag' => $this->gamertag, ':theme_color' => $this->theme_color))) 
@@ -87,7 +85,9 @@
 
 				$this->created_at = date('Y-m-d H:i:s');
 				$this->id = $con->lastInsertId(); 
-				session_start();
+				if(!isset($_SESSION)){
+					session_start();
+				}
 			} 
 			else 
 			{
