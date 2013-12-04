@@ -3,6 +3,7 @@
   require_once 'boardspace.php';
   require_once 'player.php';
   require_once 'connect.php';
+  require_once 'boardspace.php';
 
   class Game
   {
@@ -12,15 +13,19 @@
     private $players = array();
     private $totalMoves;
     private $turn;
-    private $created_at;
   
-    public function __construct($players, $totalMoves, $turn, $id = null, $board = null, $created_at = null) 
+    public function __construct($players, $totalMoves, $turn, $id = null, $board = null) 
     {  
       if(!is_array($players)) 
         throw new Exception('players paramater must be an array');
         
-      if(is_null($board)) 
+      if(!is_null($board)) 
+        $this->board = $board;
+      else 
         $this->makeBlankBoard();
+
+      if(!is_null($id))
+        $this->id = $id;
 
       $this->players = $players;
       $this->totalMoves = $totalMoves;
@@ -77,7 +82,6 @@
         if( !$add->execute(array(':player1' => $this->players[0]->id, ':player2' => $this->players[1]->id, ':total_moves' => $this->totalMoves, ':turn' => $this->turn, ':board' => $this->serializeBoard()))) 
           throw new Exception("Could not add new Player to the database in push function.");
 
-        $this->created_at = date('Y-m-d H:i:s');
         $this->id = $con->lastInsertId(); 
         if(!isset($_SESSION)){
           session_start();
@@ -143,31 +147,37 @@
     }
 
     // TODO
-    /*public static function unserialize($obj)
+    public static function unserialize($obj)
     {
       if(is_object($obj) && property_exists($obj, 'board')) 
       {
-        $data = json_decode($data);
-        //$newPlayer = new Player($obj->email, $obj->pass_hash, $obj->gamertag, $obj->theme_color, $obj->id, $obj->created_at);
-        $newGame = new Game(
+        $boardArray = json_decode($obj->board);
+        $count = 0;
+        foreach($boardArray as &$row)
+        {
+          foreach ($row as $space) 
+          {
+            $row[$count++] = BoardSpace::unserialize(json_decode($space));
+          }
+          $count = 0;
+        }
+
+        return new Game(
           array(
-            $obj->player1,
-            $obj->player2
+            Player::unserialize($obj->player1_id),
+            Player::unserialize($obj->player2_id)
           ),
-          $obj->totalMoves,
+          $obj->total_moves,
           $obj->turn,
           $obj->id,
-          $obj->board,
-          $obj->created_at
+          $boardArray
         );
-
-        return $newPlayer;
       } 
       else 
       {
         return false;
       }
-    }*/
+    }
   }
 
 ?>

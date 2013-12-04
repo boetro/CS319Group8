@@ -150,10 +150,19 @@ abstract class WebSocketServer {
                 if (isset($headers['get'])) {
                         error_log('user requested resource : ' . $headers['get']);
                         $user->requestedResource = $headers['get'];
-                        $settings = explode('?', $user->requestedResource);
+                        $settings = explode('?', substr($user->requestedResource, 1));
 
-                        $user->setPlayer(Player::unserialize(Db::find($settings[0], 'gamertag', 'player')));
-                        $user->setCurrentGame(new WebSocketGame(Game::unserialize(Db::find($settings[1], 'id', 'game'))));
+                        $player = Player::unserialize(Db::find($settings[0], 'gamertag', 'player'));
+                        $game = Game::unserialize(Db::find($settings[1], 'id', 'game'));
+
+                        if($player && $game) {
+                            $user->setPlayer($player);
+                            $user->setCurrentGame(new WebSocketGame($game));
+                        }
+                        else 
+                        {
+                            throw new Exception("Not valid game or player."); 
+                        }    
                 } else {
                         // todo: fail the connection
                         $handshakeResponse = "HTTP/1.1 405 Method Not Allowed\r\n\r\n";                        
