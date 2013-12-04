@@ -79,7 +79,9 @@
 
         $this->created_at = date('Y-m-d H:i:s');
         $this->id = $con->lastInsertId(); 
-        session_start();
+        if(!isset($_SESSION)){
+          session_start();
+        }
       } 
       else 
       {
