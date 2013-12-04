@@ -1,6 +1,6 @@
 <?php  
 
-	require 'connect.php';
+	require_once 'connect.php';
 
 	/**
 	 * Class that models the functionality of te javascript database module

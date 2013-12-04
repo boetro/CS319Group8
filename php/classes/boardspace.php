@@ -1,6 +1,6 @@
 <?php
 
-  require 'cards.enum.php';
+  require_once 'cards.enum.php';
 
   class BoardSpace
   {
@@ -9,12 +9,22 @@
     private $hasChip;
     private $chipColor;
     
-    public function __construct() {
+    public function __construct($card = null, $hasChip = null, $chipColor = null) {
       
-      // FIXME, fixed set of cards instead of randoms
-      $this->card = Cards::randomCard();
-      $this->hasChip = false;
-      $this->chipColor = false;
+      if(!is_null($card))
+        $this->card = $card;
+      else
+        $this->card = Cards::randomCard(); // FIXME, fixed set of cards instead of randoms
+
+      if(!is_null($hasChip))
+        $this->hasChip = $hasChip;
+      else
+        $this->hasChip = false;
+
+      if(!is_null($chipColor))
+        $this->chipColor = $chipColor;
+      else
+        $this->chipColor = false;
     } 
 
     /**
@@ -63,13 +73,7 @@
     
     public static function unserialize($obj) 
     {
-      $newSpace = new BoardSpace();
-
-      $newSpace->chip = $obj->chip;
-      $newSpace->hasChip = $obj->hasChip;
-      $newSpace->chipColor = $obj->chipColor; 
-
-      return $newSpace;
+      return new BoardSpace($obj->card, $obj->hasChip, $obj->chipColor);
     }
   }
   

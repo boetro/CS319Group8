@@ -1,6 +1,6 @@
 <div class="container">		
 	<?php 
-		echo "Game id is stored in post: " . $_POST['id'];
+		// echo "Game id is stored in post: " . $_POST['id'];
 	?>
 	<div class="row">
 		<div class="col-md-10 game">
