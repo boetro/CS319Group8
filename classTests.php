@@ -1,3 +1,10 @@
+<?php
+
+session_start();
+
+var_dump($_SESSION);
+
+?>
 <!doctype html>
 <html>
 <head>
@@ -9,16 +16,40 @@
 	<script src="assets/js/modules/Util.js"></script>
 </head>
 <body>
-	
 	<script>
+		// WebSockets Testing
+
+		// initialize web sockets
+		var websocket = new WebSocket("ws://localhost:9000/test?30");
+
+		console.log('creating web socket connection...');
+
+		websocket.onopen = function(event) {
+			console.log("connection established");
+			console.log(event);
+
+			// websocket.send("testing");
+		}
+
+		websocket.onclose = function(event) {
+			console.log("connection closed");
+		}
+
+		websocket.onmessage = function(event) {
+			// console.log(event);
+			console.log("message recieved from the server : " + event.data);
+			console.log("message type : " + event.type);
+		}
+
+		// PHP Ajax Module Testing
 
 		// value, column, table
-		var findPromise = Db.find('poop@poo.com', 'email', 'player');
+		// var findPromise = Db.find('poop@poo.com', 'email', 'player');
 		
 		// after your promise resolves
-		findPromise.done(function(result) {
+		/*findPromise.done(function(result) {
 			console.log($.parseJSON(result));
-		});
+		});*/ 
 
 		// email, password, gamertag, theme_color
 		/*var makePromise = Db.makeUser('holdenrehg@gmail.com', 'password', 'tag', 'blue');
@@ -49,7 +80,7 @@
 			console.log(jsonData);
 		});*/
 
-		var findGamePromise = Db.find('10', 'id', 'game');
+		/*var findGamePromise = Db.find('10', 'id', 'game');
 
 		findGamePromise.success(function(result) {
 			var game = $.parseJSON(result);
@@ -58,7 +89,7 @@
 			var board = $.parseJSON(game.board);
 			Util.arrayToJson(board);
 			console.log(board);
-		});
+		});*/
 	</script>
 </body>
 </html>
