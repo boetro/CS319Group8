@@ -8,7 +8,7 @@ class WebSocketGame
 	public $players = array();
 	public $game = null;
 
-	public function __construct(Game $game)
+	public function __construct(Game &$game)
 	{
 		$this->game = $game;
 	}

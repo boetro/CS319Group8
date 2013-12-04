@@ -114,20 +114,38 @@ abstract class WebSocketServer {
                     break;
                 }
             }
+            
             if ($foundUser !== null) {
+
+                $count = 0;
+                $gamePlayers = $this->users[$foundUser]->currentGame->players;
+                foreach($gamePlayers as $player)
+                {
+                    if($player->id == $this->users[$foundUser]->id)
+                    {
+                        unset($gamePlayers[$count]);
+                        $gamePlayers = array_values($gamePlayers);
+                    }
+
+                    $count++;
+                }
+
                 unset($this->users[$foundUser]);
                 $this->users = array_values($this->users);
             }
+            
             foreach ($this->sockets as $key => $sock) {
                 if ($sock == $socket) {
                     $foundSocket = $key;
                     break;
                 }
             }
+
             if ($foundSocket !== null) {
                 unset($this->sockets[$foundSocket]);
                 $this->sockets = array_values($this->sockets);
             }
+            
             if ($triggerClosed) {
                 $this->closed($disconnectedUser);
             }
@@ -148,16 +166,36 @@ abstract class WebSocketServer {
                 }
 
                 if (isset($headers['get'])) {
-                        error_log('user requested resource : ' . $headers['get']);
+                        // error_log('user requested resource : ' . $headers['get']);
                         $user->requestedResource = $headers['get'];
                         $settings = explode('?', substr($user->requestedResource, 1));
 
                         $player = Player::unserialize(Db::find($settings[0], 'gamertag', 'player'));
                         $game = Game::unserialize(Db::find($settings[1], 'id', 'game'));
 
+                        $gamefound = false;
+
                         if($player && $game) {
                             $user->setPlayer($player);
-                            $user->setCurrentGame(new WebSocketGame($game));
+                            // $user->setCurrentGame(new WebSocketGame($game));
+
+                            foreach($this->games as $activeGame)
+                            {
+                                if($activeGame->game->id == $game->id)
+                                {
+                                    $user->setCurrentGame($activeGame);
+                                    break;
+                                }
+                            }
+
+                            if(!$gamefound)
+                            {
+                                $webSocketGame = new WebSocketGame($game);
+                                $user->setCurrentGame($webSocketGame);
+
+                                // add game to list
+                                array_push($this->games, $webSocketGame);
+                            }
                         }
                         else 
                         {

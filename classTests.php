@@ -1,10 +1,7 @@
 <?php
-
 session_start();
-
-var_dump($_SESSION);
-
 ?>
+
 <!doctype html>
 <html>
 <head>
@@ -20,7 +17,7 @@ var_dump($_SESSION);
 		// WebSockets Testing
 
 		// initialize web sockets
-		var websocket = new WebSocket("ws://localhost:9000/test?30");
+		var websocket = new WebSocket('<?= "ws://localhost:9000/" . $_SESSION["gamertag"] . "?30" ?>');
 
 		console.log('creating web socket connection...');
 
