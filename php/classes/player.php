@@ -1,8 +1,8 @@
 <?php
 
 	/* @requires connect.php */
-	require 'db.php';
-	require 'util.php';
+	require_once 'db.php';
+	require_once 'util.php';
 	require_once 'connect.php';
 
 	class Player
@@ -163,9 +163,7 @@
 	    	if(is_object($obj) && property_exists($obj, 'email')) 
 	    	{
 		    	//$data = json_decode($data);
-		    	$newPlayer = new Player($obj->email, $obj->pass_hash, $obj->gamertag, $obj->theme_color, $obj->id, $obj->created_at);
-		    	
-		    	return $newPlayer;
+		    	return new Player($obj->email, $obj->pass_hash, $obj->gamertag, $obj->theme_color, $obj->id, $obj->created_at);
 	    	} 
 	    	else 
 	    	{

@@ -18,7 +18,7 @@ class GameServer extends WebSocketServer {
         {
 		$this->send($user, json_encode(array(
 			'id' => $user->id,
-                        'gamertag' => $_SESSION['id']
+                        'gamertag' => $user->player->gamertag
 		)));
 
 

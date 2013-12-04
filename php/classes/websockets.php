@@ -2,7 +2,10 @@
 
 //require_once('./daemonize.php');
 require_once 'websockets_user.php';
+require_once 'websockets_game.php';
+require_once 'db.php';
 require_once 'player.php';
+require_once 'game.php';
 
 abstract class WebSocketServer {
 
@@ -17,64 +20,66 @@ abstract class WebSocketServer {
         protected $headerSecWebSocketProtocolRequired   = false;
         protected $headerSecWebSocketExtensionsRequired = false;
 
-        function __construct($addr, $port, $bufferLength = 2048) {
-                $this->maxBufferSize = $bufferLength;
-                $this->master = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)  or die("Failed: socket_create()");
-                socket_set_option($this->master, SOL_SOCKET, SO_REUSEADDR, 1) or die("Failed: socket_option()");
-                socket_bind($this->master, $addr, $port)                      or die("Failed: socket_bind()");
-                socket_listen($this->master,20)                               or die("Failed: socket_listen()");
-                $this->sockets[] = $this->master;
-                $this->stdout("Server started\nListening on: $addr:$port\nMaster socket: ".$this->master);
+        function __construct($addr, $port, $bufferLength = 2048) 
+        {
+            $this->maxBufferSize = $bufferLength;
+            $this->master = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)  or die("Failed: socket_create()");
+            socket_set_option($this->master, SOL_SOCKET, SO_REUSEADDR, 1) or die("Failed: socket_option()");
+            socket_bind($this->master, $addr, $port)                      or die("Failed: socket_bind()");
+            socket_listen($this->master,20)                               or die("Failed: socket_listen()");
+            $this->sockets[] = $this->master;
+            $this->stdout("Server started\nListening on: $addr:$port\nMaster socket: ".$this->master);
 
-                while(true) {
-                        if (empty($this->sockets)) {
-                                $this->sockets[] = $master;
+            while(true) {
+                if (empty($this->sockets)) {
+                    $this->sockets[] = $master;
+                }
+                $read = $this->sockets;
+                $write = $except = null;
+                @socket_select($read,$write,$except,null);
+                foreach ($read as $socket) {
+                    if ($socket == $this->master) {
+                        $client = socket_accept($socket);
+                        if ($client < 0) {
+                            $this->stderr("Failed: socket_accept()");
+                            continue;
+                        } else {
+                            $this->connect($client);
                         }
-                        $read = $this->sockets;
-                        $write = $except = null;
-                        @socket_select($read,$write,$except,null);
-                        foreach ($read as $socket) {
-                                if ($socket == $this->master) {
-                                        $client = socket_accept($socket);
-                                        if ($client < 0) {
-                                                $this->stderr("Failed: socket_accept()");
-                                                continue;
-                                        } else {
-                                                $this->connect($client);
-                                        }
+                    } else {
+                        $numBytes = @socket_recv($socket,$buffer,$this->maxBufferSize,0); // todo: if($numBytes === false) { error handling } elseif ($numBytes === 0) { remote client disconected }
+                        if ($numBytes == 0) {
+                            $this->disconnect($socket);
+                        } else {
+                            $user = $this->getUserBySocket($socket);
+                            if (!$user->handshake) {
+                                $this->doHandshake($user,$buffer);
+                            } else {
+                                if ($message = $this->deframe($buffer, $user)) {
+                                    $this->process($user, utf8_encode($message));
+                                    
+                                    if($user->hasSentClose) {
+                                        $this->disconnect($user->socket);
+                                    }
                                 } else {
-                                        $numBytes = @socket_recv($socket,$buffer,$this->maxBufferSize,0); // todo: if($numBytes === false) { error handling } elseif ($numBytes === 0) { remote client disconected }
-                                        if ($numBytes == 0) {
-                                                $this->disconnect($socket);
-                                        } else {
-                                                $user = $this->getUserBySocket($socket);
-                                                if (!$user->handshake) {
-                                                        $this->doHandshake($user,$buffer);
-                                                } else {
-              if ($message = $this->deframe($buffer, $user)) {
-                $this->process($user, utf8_encode($message));
-                if($user->hasSentClose) {
-                  $this->disconnect($user->socket);
-                }
-              } else {
-                                                                do {
-                                                                        $numByte = @socket_recv($socket,$buffer,$this->maxBufferSize,MSG_PEEK);
-                                                                        if ($numByte > 0) {
-                                                                                $numByte = @socket_recv($socket,$buffer,$this->maxBufferSize,0);
-                                                                                if ($message = $this->deframe($buffer,$user)) {
-                                                                                        $this->process($user,$message);
-                      if($user->hasSentClose) {
-                        $this->disconnect($user->socket);
-                      }
-                                                                                }
-                                                                        }
-                                                                } while($numByte > 0);
-                                                        }
+                                    do {
+                                        $numByte = @socket_recv($socket,$buffer,$this->maxBufferSize,MSG_PEEK);
+                                        if ($numByte > 0) {
+                                            $numByte = @socket_recv($socket,$buffer,$this->maxBufferSize,0);
+                                            if ($message = $this->deframe($buffer,$user)) {
+                                                $this->process($user,$message);
+                                                if($user->hasSentClose) {
+                                                    $this->disconnect($user->socket);
                                                 }
+                                            }
                                         }
+                                    } while($numByte > 0);
                                 }
+                            }
                         }
+                    }
                 }
+            }
         }
 
         abstract protected function process($user,$message); // Called immediately when the data is recieved. 
@@ -82,50 +87,50 @@ abstract class WebSocketServer {
         abstract protected function closed($user);           // Called after the connection is closed.
 
         protected function connecting($user) {
-    // Override to handle a connecting user, after the instance of the User is created, but before
-    // the handshake has completed.
-  }
+            // Override to handle a connecting user, after the instance of the User is created, but before
+            // the handshake has completed.
+        }
   
-  protected function send($user,$message) {
-                //$this->stdout("> $message");
-                $message = $this->frame($message,$user);
-                socket_write($user->socket,$message,strlen($message));
+        protected function send($user,$message) {
+            //$this->stdout("> $message");
+            $message = $this->frame($message,$user);
+            socket_write($user->socket,$message,strlen($message));
         }
 
         protected function connect($socket) {
-                $user = new $this->userClass(uniqid(),$socket);
-                array_push($this->users,$user);
-                array_push($this->sockets,$socket);
-                $this->connecting($user);
+            $user = new $this->userClass(uniqid(),$socket);
+            array_push($this->users,$user);
+            array_push($this->sockets,$socket);
+            $this->connecting($user);
         }
 
         protected function disconnect($socket,$triggerClosed=true) {
-                $foundUser = null;
-                $foundSocket = null;
-                foreach ($this->users as $key => $user) {
-                        if ($user->socket == $socket) {
-                                $foundUser = $key;
-                                $disconnectedUser = $user;
-                                break;
-                        }
+            $foundUser = null;
+            $foundSocket = null;
+            foreach ($this->users as $key => $user) {
+                if ($user->socket == $socket) {
+                    $foundUser = $key;
+                    $disconnectedUser = $user;
+                    break;
                 }
-                if ($foundUser !== null) {
-                        unset($this->users[$foundUser]);
-                        $this->users = array_values($this->users);
+            }
+            if ($foundUser !== null) {
+                unset($this->users[$foundUser]);
+                $this->users = array_values($this->users);
+            }
+            foreach ($this->sockets as $key => $sock) {
+                if ($sock == $socket) {
+                    $foundSocket = $key;
+                    break;
                 }
-                foreach ($this->sockets as $key => $sock) {
-                        if ($sock == $socket) {
-                                $foundSocket = $key;
-                                break;
-                        }
-                }
-                if ($foundSocket !== null) {
-                        unset($this->sockets[$foundSocket]);
-                        $this->sockets = array_values($this->sockets);
-                }
-                if ($triggerClosed) {
-                        $this->closed($disconnectedUser);
-                }
+            }
+            if ($foundSocket !== null) {
+                unset($this->sockets[$foundSocket]);
+                $this->sockets = array_values($this->sockets);
+            }
+            if ($triggerClosed) {
+                $this->closed($disconnectedUser);
+            }
         }
 
         protected function doHandshake($user, $buffer) {
@@ -141,35 +146,47 @@ abstract class WebSocketServer {
                                 $headers['get'] = trim($reqResource[1]);
                         }
                 }
+
                 if (isset($headers['get'])) {
+                        error_log('user requested resource : ' . $headers['get']);
                         $user->requestedResource = $headers['get'];
+                        $settings = explode('?', $user->requestedResource);
+
+                        $user->setPlayer(Player::unserialize(Db::find($settings[0], 'gamertag', 'player')));
+                        $user->setCurrentGame(new WebSocketGame(Game::unserialize(Db::find($settings[1], 'id', 'game'))));
                 } else {
                         // todo: fail the connection
                         $handshakeResponse = "HTTP/1.1 405 Method Not Allowed\r\n\r\n";                        
                 }
+                
                 if (!isset($headers['host']) || !$this->checkHost($headers['host'])) {
                         $handshakeResponse = "HTTP/1.1 400 Bad Request";
                 }
+                
                 if (!isset($headers['upgrade']) || strtolower($headers['upgrade']) != 'websocket') {
                         $handshakeResponse = "HTTP/1.1 400 Bad Request";
                 } 
+                
                 if (!isset($headers['connection']) || strpos(strtolower($headers['connection']), 'upgrade') === FALSE) {
                         $handshakeResponse = "HTTP/1.1 400 Bad Request";
                 }
+                
                 if (!isset($headers['sec-websocket-key'])) {
                         $handshakeResponse = "HTTP/1.1 400 Bad Request";
-                } else {
-
                 }
+                
                 if (!isset($headers['sec-websocket-version']) || strtolower($headers['sec-websocket-version']) != 13) {
                         $handshakeResponse = "HTTP/1.1 426 Upgrade Required\r\nSec-WebSocketVersion: 13";
                 }
+                
                 if (($this->headerOriginRequired && !isset($headers['origin']) ) || ($this->headerOriginRequired && !$this->checkOrigin($headers['origin']))) {
                         $handshakeResponse = "HTTP/1.1 403 Forbidden";
                 }
+                
                 if (($this->headerSecWebSocketProtocolRequired && !isset($headers['sec-websocket-protocol'])) || ($this->headerSecWebSocketProtocolRequired && !$this->checkWebsocProtocol($header['sec-websocket-protocol']))) {
                         $handshakeResponse = "HTTP/1.1 400 Bad Request";
                 }
+                
                 if (($this->headerSecWebSocketExtensionsRequired && !isset($headers['sec-websocket-extensions'])) || ($this->headerSecWebSocketExtensionsRequired && !$this->checkWebsocExtensions($header['sec-websocket-extensions']))) {
                         $handshakeResponse = "HTTP/1.1 400 Bad Request";
                 }

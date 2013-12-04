@@ -1,7 +1,7 @@
 <?php
 
-  require 'boardspace.php';
-  require 'player.php';
+  require_once 'boardspace.php';
+  require_once 'player.php';
   require_once 'connect.php';
 
   class Game
