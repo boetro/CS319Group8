@@ -48,9 +48,9 @@
 				</div>
 			</nav>
 			
-			<div class="container" id="content">
+			<span style="padding: 0;"class="container" id="content">
 				Welcome to Sequence!
-			</div>
+			</span>
 		</div>
 		<div id="board"></div>
 	</body>
