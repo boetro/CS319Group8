@@ -14,7 +14,6 @@ class GameServer extends WebSocketServer {
 		}*/
 
                 // message hit on the server should only be sent to the other player connected to the game
-
         }
         
         protected function connected ($user) 

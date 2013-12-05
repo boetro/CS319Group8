@@ -1,5 +1,26 @@
 $(document).ready(function() {
 
+	// initialize web sockets
+
+	/*try {
+		var websocket = new WebSocket('ws://localhost:9000/testing?93');
+		console.log('creating web sockets connection...');
+
+		websocket.onopen = function(event) {
+			console.log('successfully opened web sockets connection');
+		}
+
+		websocket.onclose = function(event) {
+			console.log('web sockets connection closed');
+		}
+
+		websocket.onmessage = function(event) {
+			console.log('message recieved from web socket server');
+		}
+	} catch(e) {
+		console.log('there was a problem connecting to websockets');
+	}*/
+
 	$("#messageForm").width($("#chatbox").outerWidth());
 	
 	var timestamps = [];      // Array of chat timestamps
@@ -22,6 +43,7 @@ $(document).ready(function() {
 	
 	// Create a new deck of cards to be displayed as the game board
 	var cardDeck = $('#gameBoard').playingCards();
+	
 	// Spread the deck to display the card faces (spread lays out a deck in the pattern of a Sequence game board)
 	cardDeck.spread();
 	

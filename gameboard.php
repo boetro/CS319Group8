@@ -1,4 +1,4 @@
-<div class="container">		
+<div class="container">	
 	<?php 
 		// echo "Game id is stored in post: " . $_POST['id'];
 	?>
