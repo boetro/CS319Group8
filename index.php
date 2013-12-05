@@ -68,7 +68,6 @@
 				type: 'POST',
 				data: $("#loginInfo").serialize(),
 				success: function(response){
-					console.log(response);
 					var data = $.parseJSON(response);
 					if(data['error']){
 						$("#overallError").show();

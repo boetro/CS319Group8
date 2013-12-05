@@ -1,3 +1,4 @@
+<div id="loading" class="alert alert-success">Loading Game Please Wait.</div>
 <script type="text/javascript">
 	$(document).ready(function() {
 		var games = $.ajax({
@@ -7,12 +8,12 @@
 		});
 
 		games.done(function(result){
+			$("#loading").hide();
 			if(result === "false"){
 				$('#content').append('<div class="alert alert-warning">No games found.</div>');
 			}
 			else{
 				var data = $.parseJSON(result);
-				console.log(data);
 				if(data['error']){
 					$('#content').append('<div class="alert alert-warning">No games found.</div>');
 				}
@@ -22,7 +23,7 @@
 					var theirTurn = '<div class="panel panel-info"><div class="panel-heading"><h3 class="panel-title">Their Turn</h3></div><ul class="list-group">';
 					var theirSize = 0;
 					for(var i = 0; i < data.length; ++i){
-						var html =  '<li class="list-group-item"><div style="cursor: pointer" id="' + data[i]['id'] +'" class="panel panel-default loadedGame"><div class="panel-heading"><h3 class="panel-title">Game Against: '+ data[i]['opponent'] +'</h3></div><div class="panel-body">Total Moves: '+ data[i]['total_moves'] +'</div></div></li>';
+						var html =  '<li class="list-group-item"><div style="cursor: pointer" id="' + data[i]['id'] +'" class="panel panel-default loadedGame"><div class="panel-heading"><h3 class="panel-title">Game Against: '+ data[i]['opponent'] +'</h3></div><div class="panel-body">Total Moves: '+ data[i]['total_moves'] +'<button id="delete" type="button" class="btn btn-danger" style="float: right;">Delete Game</button></div></div></li>';
 						if(data[i]['your_turn'] === true){
 							yourTurn += html;
 							yourSize++;
@@ -42,16 +43,29 @@
 				}
 			}
 		})
-	$(document).on('click', '.loadedGame', function() {
-			$('#content').empty();
-			$.ajax({
-				url: './gameboard.php',
-				type: 'POST',
-				data: {id : $(this).attr('id')},
-				success: function() {}
-			}).done(function(html) {
-				$("#board").html(html);
-			});
-		})
+	$(document).on('click', '#delete', function(event) {
+		event.stopPropagation();
+		var panel = $(this).parents(".panel");
+		var game_id = panel.attr("id");
+		$.ajax({
+			url: './php/scripts/delete_game.php',
+			type: 'POST',
+			data: {id : game_id},
+			success: function() {}
+		}).done(function(response) {
+			$("#" + game_id).parent().remove();
+		});
 	});
+	$(document).on('click', '.loadedGame', function() {
+		$('#content').empty();
+		$.ajax({
+			url: './gameboard.php',
+			type: 'POST',
+			data: {id : $(this).attr('id')},
+			success: function() {}
+		}).done(function(html) {
+			$("#board").html(html);
+		});
+	})
+});
 </script>
