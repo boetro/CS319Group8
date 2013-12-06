@@ -54,5 +54,5 @@
 	
 	<script type="text/javascript" src="./playing-cards/playingCards.js"></script>
 	<script type="text/javascript" src="./playing-cards/playingCards.ui.js"></script>
-	<script type="text/javascript" src="./assets/js/scripts/GameBoard.js"></script>
+	<!-- <script type="text/javascript" src="./assets/js/scripts/GameBoard.js"></script> -->
 </div>

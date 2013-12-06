@@ -43,29 +43,5 @@
 				}
 			}
 		})
-	$(document).on('click', '#delete', function(event) {
-		event.stopPropagation();
-		var panel = $(this).parents(".panel");
-		var game_id = panel.attr("id");
-		$.ajax({
-			url: './php/scripts/delete_game.php',
-			type: 'POST',
-			data: {id : game_id},
-			success: function() {}
-		}).done(function(response) {
-			$("#" + game_id).parent().remove();
-		});
 	});
-	$(document).on('click', '.loadedGame', function() {
-		$('#content').empty();
-		$.ajax({
-			url: './gameboard.php',
-			type: 'POST',
-			data: {id : $(this).attr('id')},
-			success: function() {}
-		}).done(function(html) {
-			$("#board").html(html);
-		});
-	})
-});
 </script>

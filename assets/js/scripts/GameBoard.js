@@ -1,17 +1,27 @@
-$(document).ready(function() {
+// $(document).ready(function() {
 
+function loadGameBoard() {
 	// initialize web sockets
 
-	/*try {
-		var websocket = new WebSocket('ws://localhost:9000/testing?93');
+	try {
+		var websocket = new WebSocket('ws://localhost:9000/' + localStorage.gamertag + '?' + localStorage.gameId);
 		console.log('creating web sockets connection...');
 
 		websocket.onopen = function(event) {
 			console.log('successfully opened web sockets connection');
+
+			Connection.set(websocket);
+			Session.set({
+				connection: JSON.stringify(websocket)
+			});
+
+			console.log(localStorage);
 		}
 
 		websocket.onclose = function(event) {
 			console.log('web sockets connection closed');
+
+			Connection.remove();
 		}
 
 		websocket.onmessage = function(event) {
@@ -19,7 +29,7 @@ $(document).ready(function() {
 		}
 	} catch(e) {
 		console.log('there was a problem connecting to websockets');
-	}*/
+	}
 
 	$("#messageForm").width($("#chatbox").outerWidth());
 	
@@ -258,4 +268,4 @@ $(document).ready(function() {
 	Date.prototype.getInfo = function() {
 		return this.getMonth() + '/' + this.getDate() + '/' + this.getFullYear() + ' ' + this.getHours() + ':' + this.getMinutes();
 	};
-});
+}

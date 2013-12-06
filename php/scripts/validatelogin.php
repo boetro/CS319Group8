@@ -33,7 +33,11 @@
 			$_SESSION['id'] = $row['id'];
 			$_SESSION['gamertag'] = $username;
 			$_SESSION['theme_color'] = $row['theme_color'];
-			echo json_encode(array('error' => false));
+			echo json_encode(array(
+				'error' => false,
+				'gamertag' => $_SESSION['gamertag'],
+				'id' => $_SESSION['id']
+			));
 		}
 		else
 		{

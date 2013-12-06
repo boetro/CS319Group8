@@ -11,13 +11,14 @@ session_start();
 	<script src="assets/js/config.js"></script>
 	<script src="assets/js/modules/Db.js"></script>
 	<script src="assets/js/modules/Util.js"></script>
+	<script src="assets/js/modules/Session.js"></script>
 </head>
 <body>
 	<script>
 		// WebSockets Testing
 
 		// initialize web sockets
-		var websocket = new WebSocket('<?= "ws://localhost:9000/" . $_SESSION["gamertag"] . "?30" ?>');
+		/*var websocket = new WebSocket('<?= "ws://localhost:9000/" . $_SESSION["gamertag"] . "?30" ?>');
 
 		console.log('creating web socket connection...');
 
@@ -36,7 +37,30 @@ session_start();
 			// console.log(event);
 			console.log("message recieved from the server : " + event.data);
 			console.log("message type : " + event.type);
-		}
+		}*/
+
+		// Web Storage Testing
+
+		console.log(localStorage);
+		Session.set({
+			firstname: "Holden",
+			lastname: "Rehg"
+		});
+
+		console.log(localStorage);
+
+		// this should destory nothing
+		Session.destroy({
+			firstname: false,
+			lastname: false
+		});
+
+		console.log(localStorage);
+
+		// this should destroy everything except for firstname
+		Session.destroy();
+
+		console.log(localStorage);
 
 		// PHP Ajax Module Testing
 

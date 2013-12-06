@@ -4,6 +4,7 @@
 		<title>Sequence</title>
 		<meta charset="utf-8">
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+		<script src="assets/js/modules/Session.js"></script>
 	</head>
 	
 	<body>
@@ -45,6 +46,9 @@
 	</body>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script type="text/javascript">
+	// remove all client side storage to start
+	Session.destroy();
+
 	$(document).ready(function() {
 		$(".alert").hide();
 		$("#submit").on("click", function(){
@@ -74,6 +78,13 @@
 						$("#overallError").html(data['message']);
 						$("#password").val('');
 					}else{
+
+						// set client side sessions for user
+						Session.set({
+							gamertag: data.gamertag,
+							id: data.id
+						});
+
 						window.location.replace("./main.php");
 					}
 				}
