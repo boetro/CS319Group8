@@ -3,34 +3,41 @@
 function loadGameBoard() {
 	// initialize web sockets
 
-	try {
-		var websocket = new WebSocket('ws://localhost:9000/' + localStorage.gamertag + '?' + localStorage.gameId);
-		console.log('creating web sockets connection...');
+	var websocket = new WebSocket('ws://localhost:9000/' + localStorage.gamertag + '?' + localStorage.gameId);
 
-		websocket.onopen = function(event) {
-			console.log('successfully opened web sockets connection');
+	console.log('creating web sockets connection...');
 
-			Connection.set(websocket);
-			Session.set({
-				connection: JSON.stringify(websocket)
-			});
+	$('#board > .container').hide();
+	$('#board').append('<div id="connecting" class="container alert alert-info">Connecting to Web Sockets...</div>');
 
-			console.log(localStorage);
-		}
+	websocket.onopen = function(event) {
+		console.log('successfully opened web sockets connection');
 
-		websocket.onclose = function(event) {
-			console.log('web sockets connection closed');
-
-			Connection.remove();
-		}
-
-		websocket.onmessage = function(event) {
-			console.log('message recieved from web socket server');
-		}
-	} catch(e) {
-		console.log('there was a problem connecting to websockets');
+		// Connection.set(websocket);
+		drawBoard(websocket);
 	}
 
+	websocket.onclose = function(event) {
+		console.log('web sockets connection closed');
+
+		// Connection.remove();
+	}
+
+	websocket.onmessage = function(event) {
+		console.log('message recieved from web socket server');
+	}
+
+	websocket.onerror = function(event) {
+		console.log("there was a problem connecting to the web sockets server");
+
+		$('#board > .container').html('<div class="alert alert-danger">Could not connect to Web Sockets server.</div>');
+	}
+}
+
+function drawBoard(websocket) {
+
+	$('#connecting').remove();
+	$('#board > .container').fadeIn('slow');
 	$("#messageForm").width($("#chatbox").outerWidth());
 	
 	var timestamps = [];      // Array of chat timestamps
@@ -49,13 +56,20 @@ function loadGameBoard() {
 	};
 	
 	// TODO: load chats from database
-	// TODO: load board state from database
 	
 	// Create a new deck of cards to be displayed as the game board
 	var cardDeck = $('#gameBoard').playingCards();
+
+	var gamePromise = Db.find(localStorage.gameId, 'id', 'game'),
+		game;
 	
+	gamePromise.done(function(data) {
+		 game = JSON.parse(data);
+         game.board = Util.arrayToJson(JSON.parse(game.board));
+	});
+
 	// Spread the deck to display the card faces (spread lays out a deck in the pattern of a Sequence game board)
-	cardDeck.spread();
+	cardDeck.spread(gamePromise);
 	
 	// Create a new deck of cards to draw from
 	var drawDeck = new playingCards();
@@ -127,6 +141,8 @@ function loadGameBoard() {
 	// This listener toggles the highlighting of cards in a player's hand and on the game board
 	// When a user clicks a card in their hand, it becomes highlighted along with all open spots on the game board that match
 	$(document).on('click', '#yourHand > .playingCard', function(card) {
+
+		console.log("card clicked in your hand");
 		var classNameOriginal = card.currentTarget.className;
 		var className = "." + classNameOriginal.split(" ").join(".");
 		
@@ -146,12 +162,23 @@ function loadGameBoard() {
 	// Click method for cards on the game board
 	// If a user clicks a highlighted card on the game board, they will put a chip on that space
 	// Reference: [ rgb(255, 169, 113) ] is the rgb value for the opponent's color
-	$("#gameBoard > .playingCard").click(function(card){
+	$(document).on('click', "#gameBoard > .playingCard", function(card) {
+
+		console.log("game board playing card clicked");
 		// if the game board card you clicked on is light green
 		if ($(".front", this).css("background-color") === "rgb(153, 255, 153)") {
+
+			var coords = $(this)[0].children[0].dataset;
+			game.board[coords.y][coords.x].hasChip = true;
+			game.board[coords.y][coords.x].owner = localStorage.id;
+			// console.log('board before updating');
+			// console.log(JSON.stringify(game.board));
+			Db.updateGame(game.id, JSON.stringify(game.board), game.player1_id, game.player2_id, game.total_moves, game.turn);
+
 			var classNameOriginal = card.currentTarget.className;
 			var className = "." + classNameOriginal.split(" ").join(".");
 			
+			// handle discarding from hand
 			$("#yourHand > " + className).each(function () {
 				if ($(this).attr('id') === clickedCard.id) {
 					clickedElement = hand[$(this).attr('id').charAt(4)];

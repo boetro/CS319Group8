@@ -162,7 +162,6 @@
 	    {
 	    	if(is_object($obj) && property_exists($obj, 'email')) 
 	    	{
-		    	//$data = json_decode($data);
 		    	return new Player($obj->email, $obj->pass_hash, $obj->gamertag, $obj->theme_color, $obj->id, $obj->created_at);
 	    	} 
 	    	else 

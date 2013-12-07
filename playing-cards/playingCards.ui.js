@@ -24,71 +24,121 @@
     /*
      * requires jquery (currently)
      */
-    playingCards.prototype.spread = function(dest) {
+    playingCards.prototype.spread = function(gamePromise, dest) {
+
+        // for(var card in this.cards) {
+
+        //     console.log("index " + card + " : " + this.cards[card].rankString + " of " + this.cards[card].suitString);
+        //     console.log(this.cards[card]);
+        // }
+
         if (!this.conf.el && !dest) {
             return false;
         }
+        
         var to = this.conf.el || dest,
             l = this.cards.length,
-            i;
+            i,
+            cards = this.cards;
+        
         to.html('');
+
+        gamePromise.done(function(data) {
+           
+            var obj = JSON.parse(data);
+            obj.board = Util.arrayToJson(JSON.parse(obj.board));
+            console.log(obj);
+
+            var rows = obj.board.length;
+            for(var y = 0; y < rows; y+=1) {
+
+                var columns = obj.board[y].length;
+                for(var x = 0; x < columns; x+=1) {
+
+                    var card = obj.board[y][x];
+                    if(card.hasChip) {
+                        if(card.owner === localStorage.id) {
+                            to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(92, 133, 255)'));
+                        }
+                        else {
+                            to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(255, 169, 113)'));
+                        }
+                    } else {
+                        to.append(cards[obj.board[y][x].card].getHTML(x, y));
+                    }
+                }
+            }
+        });
+        
         // clear (just a demo)
-        for(i = 0; i < 12; i++){
-            to.append(this.cards[i].getHTML());
-        }
-        to.append(this.cards[35].getHTML());
-        for(i = 36; i <= 45; i++){
-            to.append(this.cards[i].getHTML());
-        }
-        to.append(this.cards[12].getHTML());
-        to.append(this.cards[34].getHTML());
-        for(i = 63; i <= 71; i++){
-            to.append(this.cards[i].getHTML());
-        }
-        to.append(this.cards[46].getHTML());
-        to.append(this.cards[13].getHTML());
-        to.append(this.cards[33].getHTML());
-        to.append(this.cards[62].getHTML());
-        for(i = 83; i <= 89; i++){
-            to.append(this.cards[i].getHTML());
-        }
-        to.append(this.cards[72].getHTML());
-        to.append(this.cards[47].getHTML());
-        to.append(this.cards[14].getHTML());
-        to.append(this.cards[32].getHTML());
-        to.append(this.cards[61].getHTML());
-        to.append(this.cards[82].getHTML());
-        for(i = 95; i >= 90; i--){
-            to.append(this.cards[i].getHTML());
-        }
-        to.append(this.cards[73].getHTML());
-        to.append(this.cards[48].getHTML());
-        to.append(this.cards[15].getHTML());
-        to.append(this.cards[31].getHTML());
-        to.append(this.cards[60].getHTML());
-        for(i = 81; i >= 74; i--){
-            to.append(this.cards[i].getHTML());
-        }
-        to.append(this.cards[49].getHTML());
-        to.append(this.cards[16].getHTML());
-        to.append(this.cards[30].getHTML());
-        for(i = 59; i >= 50; i--){
-            to.append(this.cards[i].getHTML());
-        }
-        to.append(this.cards[17].getHTML());
-        for(i = 29; i >= 18; i--){
-            to.append(this.cards[i].getHTML());
-        }
+        // for(i = 0; i < 12; i++){
+        //     to.append(this.cards[i].getHTML());
+        // }
+        
+        // to.append(this.cards[35].getHTML());
+        // for(i = 36; i <= 45; i++){
+        //     to.append(this.cards[i].getHTML());
+        // }
+        // to.append(this.cards[12].getHTML());
+        
+        // to.append(this.cards[34].getHTML());
+        // for(i = 63; i <= 71; i++){
+        //     to.append(this.cards[i].getHTML());
+        // }
+        
+        // to.append(this.cards[46].getHTML());
+        // to.append(this.cards[13].getHTML());
+        // to.append(this.cards[33].getHTML());
+        // to.append(this.cards[62].getHTML());
+        // for(i = 83; i <= 89; i++){
+        //     to.append(this.cards[i].getHTML());
+        // }
+        
+        // to.append(this.cards[72].getHTML());
+        // to.append(this.cards[47].getHTML());
+        // to.append(this.cards[14].getHTML());
+        // to.append(this.cards[32].getHTML());
+        // to.append(this.cards[61].getHTML());
+        // to.append(this.cards[82].getHTML());
+        
+        // for(i = 95; i >= 90; i--){
+        //     to.append(this.cards[i].getHTML());
+        // }
+        
+        // to.append(this.cards[73].getHTML());
+        // to.append(this.cards[48].getHTML());
+        // to.append(this.cards[15].getHTML());
+        // to.append(this.cards[31].getHTML());
+        // to.append(this.cards[60].getHTML());
+        // for(i = 81; i >= 74; i--){
+        //     to.append(this.cards[i].getHTML());
+        // }
+        
+        // to.append(this.cards[49].getHTML());
+        // to.append(this.cards[16].getHTML());
+        // to.append(this.cards[30].getHTML());
+        // for(i = 59; i >= 50; i--){
+        //     to.append(this.cards[i].getHTML());
+        // }
+        
+        // to.append(this.cards[17].getHTML());
+        // for(i = 29; i >= 18; i--){
+        //     to.append(this.cards[i].getHTML());
+        // }
     };
     /**
      * generate (and cache) html for the card
      * 
      * @return string The HTML block to show the card
      */
-    playingCards.card.prototype.getHTML = function() {
+    playingCards.card.prototype.getHTML = function(x, y, hasChip, color) {
+        
+        var hasChip = hasChip || false;
+
         if (this.html) {
             return this.html;
         }
+        
         this.suitCode = "&nbsp;";
         this.colorCls = '';
         switch (this.suit) {
@@ -114,7 +164,15 @@
         if (this.rank === "N") {
             txt = this.rankString.split('').join('<br />');
         }
-        var strBuild = ['<div class="playingCard '+this.suit+this.rank+'"><div class="front ', this.colorCls, '"><div class="corner">', txt, '<br />', this.suitCode, '</div>'];
+
+        var strBuild; 
+        
+        if(!hasChip) {
+            strBuild = ['<div class="playingCard '+this.suit+this.rank+'"><div class="front ', this.colorCls, '" data-x="' + x + '" data-y="' + y + '"><div class="corner">', txt, '<br />', this.suitCode, '</div>'];
+        } else {
+            strBuild = ['<div class="playingCard '+this.suit+this.rank+'"><div class="front occupied ', this.colorCls, '" data-x="' + x + '" data-y="' + y + '" style="background-color:' + color + '"><div class="corner">', txt, '<br />', this.suitCode, '</div>'];
+        }
+
         strBuild = strBuild.concat(this.buildIconHTML());
         strBuild = strBuild.concat('<div class="corner cornerBR flip">', txt, '<br />', this.suitCode, '</div></div></div>');
         this.html = strBuild.join('');

@@ -3,7 +3,6 @@
 		var newGame = $.ajax({
 			url: "./php/scripts/random_game.php",
 			type: 'POST',
-			success: function() {}
 		});
 		newGame.done(function(result){
 			var data = $.parseJSON(result);

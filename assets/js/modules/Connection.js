@@ -9,6 +9,8 @@ var Connection = (function() {
 	var remove = function() {
 
 		if(connection) {
+
+			console.log("connection is still open. closing...");
 			connection.close();
 			connection = undefined;
 		}

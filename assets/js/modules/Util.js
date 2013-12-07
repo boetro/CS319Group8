@@ -11,7 +11,7 @@ var Util = (function() {
 			throw "Array to json method requires paramter to be an array";
 		}
 
-		// iteratoe through array elements, if contains more arrays, recursively call this function, else parse the json
+		// iterate through array elements, if contains more arrays, recursively call this function, else parse the json
 		for(var i = 0; i < array.length; i+=1) {
 			if(array[i] instanceof Array) {
 				arrayToJson(array[i]);
@@ -19,6 +19,8 @@ var Util = (function() {
 				array[i] = $.parseJSON(array[i]);
 			}
 		}
+
+		return array;
 	};
 
 	return {

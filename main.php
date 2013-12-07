@@ -7,8 +7,11 @@
 		<link rel="stylesheet" type="text/css" media="all" href="./playing-cards/playingCards.ui.css"/>
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<script src="./assets/js/config.js"></script>
+		<script src="./assets/js/modules/Db.js"></script>
 		<script src="./assets/js/modules/Connection.js"></script>
 		<script src="./assets/js/modules/Session.js"></script>
+		<script src="./assets/js/modules/Util.js"></script>
 		<script src="./assets/js/scripts/PageLoad.js" type="text/JavaScript"></script>
 		<script src="./assets/js/scripts/validateSession.js"></script>
 		<script src="./assets/js/scripts/GameBoard.js"></script>

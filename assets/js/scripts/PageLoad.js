@@ -2,13 +2,12 @@ $(document).ready(function() {
 	$('#new').on('click', function(event) {
 
 		// if websocket connection is still open close it
-		Connection.close();
+		// Connection.remove();
 
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
-			connection: false,
 			gameId: true
 		});
 
@@ -26,13 +25,12 @@ $(document).ready(function() {
 	$('#current').on('click', function(event) {
 
 		// if websocket connection is still open close it
-		Connection.close();
+		// Connection.remove();
 
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
-			connection: false,
 			gameId: true
 		});
 
@@ -50,13 +48,12 @@ $(document).ready(function() {
 	$('#highScores').on('click', function(event) {
 
 		// if websocket connection is still open close it
-		Connection.close();
+		// Connection.remove();
 
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
-			connection: false,
 			gameId: true
 		});
 
@@ -74,13 +71,12 @@ $(document).ready(function() {
 	$('#help').on('click', function(event) {
 
 		// if websocket connection is still open close it
-		Connection.close();
+		// Connection.remove();
 
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
-			connection: false,
 			gameId: true
 		});
 
@@ -98,13 +94,12 @@ $(document).ready(function() {
 	$('#settings').on('click', function(event) {
 
 		// if websocket connection is still open close it
-		Connection.close();
+		// Connection.remove();
 
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
-			connection: false,
 			gameId: true
 		});
 

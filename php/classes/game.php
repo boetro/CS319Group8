@@ -102,11 +102,11 @@
     {
       $jsonBoard = array(array());
 
-      for($y = 0; $y < 12; $y+=1)
+      for($y = 0; $y < 8; $y+=1)
       {
         $row = array();
         
-        for($x = 0; $x < 8; $x+=1) 
+        for($x = 0; $x < 12; $x+=1) 
         {
           //BoardSpace::unserialize($this->board[$y][$x]);
           array_push($row, BoardSpace::unserialize($this->board[$y][$x])->serialize());    
@@ -125,12 +125,81 @@
      **/
     private function makeBlankBoard() 
     {
-      for($y = 0; $y < 12; $y+=1)
+      // row 1
+      $x = 0;
+      for($i = 0; $i < 12; $i++)
       {
-        for($x = 0; $x < 8; $x+=1)
-        {
-          $this->board[$y][$x] = new BoardSpace();
-        }
+        $this->board[0][$x++] = new BoardSpace($i);
+      }
+      
+      // row 2
+      $x = 0;
+      $this->board[1][$x++] = new BoardSpace(35);
+      for($i = 36; $i <= 45; $i++)
+      {
+        $this->board[1][$x++] = new BoardSpace($i);
+      }
+      $this->board[1][$x++] = new BoardSpace(12);
+      
+      // row 3
+      $x = 0;
+      $this->board[2][$x++] = new BoardSpace(34);
+      for($i = 63; $i <= 71; $i++)
+      {
+        $this->board[2][$x++] = new BoardSpace($i);
+      }
+      $this->board[2][$x++] = new BoardSpace(46);
+      $this->board[2][$x++] = new BoardSpace(13);
+      
+      // row 4
+      $x = 0;
+      $this->board[3][$x++] = new BoardSpace(33);
+      $this->board[3][$x++] = new BoardSpace(62);
+      for($i = 83; $i <= 89; $i++)
+      {
+        $this->board[3][$x++] = new BoardSpace($i);
+      }
+      $this->board[3][$x++] = new BoardSpace(72);
+      $this->board[3][$x++] = new BoardSpace(47);
+      $this->board[3][$x++] = new BoardSpace(14);
+      
+      // row 5
+      $x = 0;
+      $this->board[4][$x++] = new BoardSpace(32);
+      $this->board[4][$x++] = new BoardSpace(61);
+      $this->board[4][$x++] = new BoardSpace(82);
+      for($i = 95; $i >= 90; $i--){
+        $this->board[4][$x++] = new BoardSpace($i);
+      }
+      $this->board[4][$x++] = new BoardSpace(73);
+      $this->board[4][$x++] = new BoardSpace(48);
+      $this->board[4][$x++] = new BoardSpace(15);
+      
+      // row 6
+      $x = 0;
+      $this->board[5][$x++] = new BoardSpace(31);
+      $this->board[5][$x++] = new BoardSpace(60);
+      for($i = 81; $i >= 74; $i--)
+      {
+        $this->board[5][$x++] = new BoardSpace($i);
+      }
+      $this->board[5][$x++] = new BoardSpace(49);
+      $this->board[5][$x++] = new BoardSpace(16);
+      
+      // row 7
+      $x = 0;
+      $this->board[6][$x++] = new BoardSpace(30);
+      for($i = 59; $i >= 50; $i--)
+      {
+        $this->board[6][$x++] = new BoardSpace($i);
+      }
+      $this->board[6][$x++] = new BoardSpace(17);
+      
+      // row 8
+      $x = 0;
+      for($i = 29; $i >= 18; $i--)
+      {
+        $this->board[7][$x++] = new BoardSpace($i);
       }
     }
 

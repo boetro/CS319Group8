@@ -5,26 +5,25 @@
   class BoardSpace
   {
     
+    // maps to js card array index
     private $card;
     private $hasChip;
-    private $chipColor;
+    // player id of the owner of this board space
+    private $owner;
     
-    public function __construct($card = null, $hasChip = null, $chipColor = null) {
-      
-      if(!is_null($card))
-        $this->card = $card;
-      else
-        $this->card = Cards::randomCard(); // FIXME, fixed set of cards instead of randoms
+    public function __construct($card, $hasChip = null, $owner = null) {
 
       if(!is_null($hasChip))
         $this->hasChip = $hasChip;
       else
         $this->hasChip = false;
 
-      if(!is_null($chipColor))
-        $this->chipColor = $chipColor;
+      if(!is_null($owner))
+        $this->owner = $owner;
       else
-        $this->chipColor = false;
+        $this->owner = false;
+
+      $this->card = $card;
     } 
 
     /**
@@ -67,13 +66,13 @@
       return json_encode(array(
         'card' => $this->card,
         'hasChip' => $this->hasChip,
-        'chipColor' => $this->chipColor
+        'owner' => $this->owner
       ));
     }
     
     public static function unserialize($obj) 
     {
-      return new BoardSpace($obj->card, $obj->hasChip, $obj->chipColor);
+      return new BoardSpace($obj->card, $obj->hasChip, $obj->owner);
     }
   }
   
