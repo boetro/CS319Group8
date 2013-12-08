@@ -8,7 +8,8 @@ class Message
 	private $game;
 	private $time;
 
-	public function __construct($sender, $message, $game, $time) {
+	public function __construct($sender, $message, $game, $time) 
+	{
 		$this->sender = $sender;
 		$this->message = $message;
 		$this->game = $game;
@@ -18,9 +19,15 @@ class Message
 	/**
 	* Return a JSON representation of this chat message 
 	**/
-	public function toJSONChat() {
+	public function toJSONChat() 
+	{
 		return json_encode(array('sender' => $this->sender,
 			'message' => $this->message,
 			'time' => $this->time));		
+	}
+
+	public function push() 
+	{
+
 	}
 }
