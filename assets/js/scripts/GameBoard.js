@@ -13,14 +13,13 @@ function loadGameBoard() {
 	websocket.onopen = function(event) {
 		console.log('successfully opened web sockets connection');
 
-		// Connection.set(websocket);
 		drawBoard(websocket);
 	}
 
 	websocket.onclose = function(event) {
 		console.log('web sockets connection closed');
 
-		// Connection.remove();
+		$('#board > .container').html('<div class="alert alert-danger">Sorry, Web Socket connection unexpectedly closed.</div>');
 	}
 
 	websocket.onmessage = function(event) {

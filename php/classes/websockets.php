@@ -184,6 +184,7 @@ abstract class WebSocketServer {
                                 if($activeGame->game->id == $game->id)
                                 {
                                     $user->setCurrentGame($activeGame);
+                                    $gamefound = true;
                                     break;
                                 }
                             }

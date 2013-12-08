@@ -20,33 +20,39 @@ class GameServer extends WebSocketServer {
                 error_log('');
                 error_log('message receieved : ' . $message->message);
                 error_log('message type : ' . $message->type);
-                error_log('sent from user : ' . $message->user);
+                // error_log('sent from user : ' . $message->user);
+                error_log('sent from user : ' . $user->player->id);
                 error_log('sent from game : ' . $message->game);
+                error_log('each player in game : ');
+                foreach($user->currentGame->players as $player) 
+                {
+                        error_log('---- id : ' . $player->player->id);
+                }
 
                 // look to see if this game exists
-                foreach($this->games as $game) 
-                {
-                        if($game->game->id === $message->game) 
-                        {       
-                                error_log('found game');
+                // foreach($this->games as $game) 
+                // {
+                //         if($game->game->id === $message->game) 
+                //         {       
+                //                 error_log('found game');
 
-                                // send the message to the other player
-                                foreach ($game->players as $player) 
-                                {
-                                       if($player->player->id) 
-                                       {        
-                                                error_log('found other player in game');
-                                                error_log('other player id : ' . $player->player->id);
-                                                $this->send($player, $message);
+                //                 // send the message to the other player
+                //                 foreach ($game->players as $player) 
+                //                 {
+                //                        if($player->player->id) 
+                //                        {        
+                //                                 error_log('found other player in game');
+                //                                 error_log('other player id : ' . $player->player->id);
+                //                                 $this->send($player, $message);
                                                 
-                                                // log the chat in the db
-                                                // $dbMessage = new Message();
-                                                // $dbMessage->push();
-                                                break;
-                                       }
-                                }
-                        }
-                }
+                //                                 // log the chat in the db
+                //                                 // $dbMessage = new Message();
+                //                                 // $dbMessage->push();
+                //                                 break;
+                //                        }
+                //                 }
+                //         }
+                // }
                 error_log('');
         }
         
