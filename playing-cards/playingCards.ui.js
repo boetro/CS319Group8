@@ -43,9 +43,11 @@
             obj.board = Util.arrayToJson(JSON.parse(obj.board));
 
             var rows = obj.board.length;
+            console.log("rows: " + rows);
             for(var y = 0; y < rows; y+=1) {
 
                 var columns = obj.board[y].length;
+                console.log("columns: " + columns);
                 for(var x = 0; x < columns; x+=1) {
 
                     var card = obj.board[y][x];
