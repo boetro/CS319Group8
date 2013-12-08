@@ -1,39 +1,56 @@
+<!--
+	This file allows the user to change any of their account and preference settings,
+	which includes password, email, and theme color change.
+-->
+
 <script type="text/javascript" src="assets/js/modules/Db.js"></script>
 <script type="text/javascript" src="colorpicker/js/colorpicker.js"></script>
 <script type="text/javascript" src="assets/js/config.js"></script>
 
 <script>
 $(document).ready(function() {
-
+	
+	//hides previous errors
 	$("#error").hide();
 
+	//sets up color picker
 	$("#colorpickerHolder").ColorPicker({flat: true, 
 										color: '#FFFFFF', 
 										onChange : function(hsb, hex, rgb){
 											document.body.style.backgroundColor = "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
 										}
 	});	
+	//hides color picker
 	$("#colorpickerHolder").hide();
 
+	//"Default" button is clicked
 	$('#default').on('click', function(event) {
 		document.body.style.backgroundColor="white";
 		event.preventDefault;
 	});
+	
+	//"Turquoise" button is clicked
 	$('#turquoise').on('click', function(event) {
 		document.body.style.backgroundColor="paleturquoise";
 		event.preventDefault;
 	});
+	
+	//"Rose" button is clicked
 	$('#rose').on('click', function(event) {
 		document.body.style.backgroundColor="mistyrose";
 		event.preventDefault;
 	});
+	
+	//"Custom" button is clicked
 	$("#custom").on('click', function () {
 		if($("#colorpickerHolder").is(":visible")){
 			$("#colorpickerHolder").hide();
 		}else{
 			$("#colorpickerHolder").show();
 		}
-	})
+	});
+	
+	//"Update" button is clicked
 	$("#update").on("click", function() {
 
 		var bgColor = $("body").css("background-color");
@@ -46,17 +63,29 @@ $(document).ready(function() {
 				$("#error").text("Error saving back ground color please try again later");
 			}
 		});
+		$('#updateInfo').html("Updated!").show();
+			setTimeout(function(){
+			 $('#updateInfo').fadeOut('slow');
+                },3000);
 	});
 });
 </script><link rel="stylesheet" media="screen" type="text/css" href="colorpicker/css/colorpicker.css" />
 
+<!-- Settings navigation bar-->
 <ul class="nav nav-pills" id="settingsTabs">
 	<li class="active"><a href="#preferences" data-toggle="tab">Preferences</a></li>
 	<li><a href="#password" data-toggle="tab">Update Password</a></li>
 	<li><a href="#email" data-toggle="tab">Email Settings</a></li>
 </ul>
+
+<!-- Errors will be displayed-->
 <div class="alert alert-warning" id="error" style="margin-top: 20px;"></div>
+
+<div class="alert updateInfo" id="updateInfo" style="margin-top: 20px;"></div>
+
 <div class="tab-content">
+
+	<!-- Preference Tab-->
 	<div class="tab-pane fade in active" id="preferences"><br>
 		<form role="form" action="">
 			<div class="form-group">
@@ -72,6 +101,7 @@ $(document).ready(function() {
 		</form>
 	</div>
 	
+	<!-- Update Password Tab-->
 	<div class="tab-pane fade in" id="password"><br>
 		<form role="form" action="">
 			<div class="form-group">
@@ -85,6 +115,7 @@ $(document).ready(function() {
 		</form>
 	</div>
 	
+	<!-- Email Settings Tab-->
 	<div class="tab-pane fade in" id="email"><br>
 		<form role="form" action="">
 			<div class="form-group">
@@ -97,10 +128,11 @@ $(document).ready(function() {
 			</div>
 			<div class="checkbox">
 				<label>
-					<input type="checkbox">Recieve email notifications
+					<input type="checkbox">Receive email notifications
 				</label>
 			</div>
 		</form>
 	</div>
+	<!-- Update Button-->
 	<button type="button" class="btn btn-default" id="update">Update</button>
 </div>
