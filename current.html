@@ -17,9 +17,9 @@
 					$('#content').append('<div class="alert alert-warning">No games found.</div>');
 				}
 				else{
-					var yourTurn = '<div class="panel panel-info"><div class="panel-heading"><h3 class="panel-title">Your Turn</h3></div><ul class="list-group">';
+					var yourTurn = '<div class="panel panel-info" id="yourTurn"><div class="panel-heading"><h3 class="panel-title">Your Turn</h3></div><ul class="list-group">';
 					var yourSize = 0;
-					var theirTurn = '<div class="panel panel-info"><div class="panel-heading"><h3 class="panel-title">Their Turn</h3></div><ul class="list-group">';
+					var theirTurn = '<div class="panel panel-info" id="theirTurn"><div class="panel-heading"><h3 class="panel-title">Their Turn</h3></div><ul class="list-group">';
 					var theirSize = 0;
 					for(var i = 0; i < data.length; ++i){
 						var html =  '<li class="list-group-item"><div style="cursor: pointer" id="' + data[i]['id'] +'" class="panel panel-default loadedGame"><div class="panel-heading"><h3 class="panel-title">Game Against: '+ data[i]['opponent'] +'</h3></div><div class="panel-body">Total Moves: '+ data[i]['total_moves'] +'<button id="delete" type="button" class="btn btn-danger" style="float: right;">Delete Game</button></div></div></li>';

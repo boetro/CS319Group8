@@ -129,6 +129,7 @@ $(document).ready(function() {
 
 	$(document).on('click', '.loadedGame', function() {
 		var gameId = $(this).attr('id');
+		var panel = $(this).parents(".panel");
 
 		$('#content').empty();
 		$.ajax({
@@ -138,6 +139,7 @@ $(document).ready(function() {
 		}).done(function(html) {
 			$("#board").html(html);
 			
+
 			// set client side session to show that your currently in a board game view
 			Session.set({
 				gameId: gameId

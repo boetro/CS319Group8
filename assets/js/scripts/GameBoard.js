@@ -213,6 +213,7 @@ function drawBoard(websocket) {
 		if ($(".front", this).css("background-color") === "rgb(153, 255, 153)") {
 
 			var coords = $(this)[0].children[0].dataset;
+			console.log("y: " + coords.y + " x: " + coords.x);
 			var boardSpace = game.board[coords.y][coords.x];
 			game.board[coords.y][coords.x] = {
 				card: boardSpace.card,
@@ -250,6 +251,7 @@ function drawBoard(websocket) {
 
 			// save game state
 			Db.updateGame(game.id, JSON.stringify(game.board), game.player1_id, game.player2_id, game.total_moves, game.turn);
+			$('#yourHand > .playingCard').click(false);
 		}
 		
 		// Check for sequences
