@@ -26,12 +26,6 @@
      */
     playingCards.prototype.spread = function(gamePromise, dest) {
 
-        // for(var card in this.cards) {
-
-        //     console.log("index " + card + " : " + this.cards[card].rankString + " of " + this.cards[card].suitString);
-        //     console.log(this.cards[card]);
-        // }
-
         if (!this.conf.el && !dest) {
             return false;
         }
@@ -47,7 +41,6 @@
            
             var obj = JSON.parse(data);
             obj.board = Util.arrayToJson(JSON.parse(obj.board));
-            console.log(obj);
 
             var rows = obj.board.length;
             for(var y = 0; y < rows; y+=1) {
@@ -57,11 +50,22 @@
 
                     var card = obj.board[y][x];
                     if(card.hasChip) {
+                        // this player owns it
                         if(card.owner === localStorage.id) {
-                            to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(92, 133, 255)'));
+                            // this card is apart of a sequence
+                            if(card.sequence) {
+                                to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(82, 133, 255)'));
+                            } else {
+                                to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(92, 133, 255)'));
+                            }
                         }
+                        // opponent owns it
                         else {
-                            to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(255, 169, 113)'));
+                            if(card.sequence) {
+                                to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(245, 169, 113)'));
+                            } else {
+                                to.append(cards[obj.board[y][x].card].getHTML(x, y, true, 'rgb(255, 169, 113)'));
+                            }
                         }
                     } else {
                         to.append(cards[obj.board[y][x].card].getHTML(x, y));

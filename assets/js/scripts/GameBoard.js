@@ -62,11 +62,6 @@ function drawBoard(websocket) {
 
 	var gamePromise = Db.find(localStorage.gameId, 'id', 'game'),
 		game;
-	
-	gamePromise.done(function(data) {
-		 game = JSON.parse(data);
-         game.board = Util.arrayToJson(JSON.parse(game.board));
-	});
 
 	// Spread the deck to display the card faces (spread lays out a deck in the pattern of a Sequence game board)
 	cardDeck.spread(gamePromise);
@@ -79,12 +74,73 @@ function drawBoard(websocket) {
 	// Variable to track which card was most recently clicked
 	var clickedCard = {};
 	
-	
+	gamePromise.done(function(data) {
+		 game = JSON.parse(data);
+         game.board = Util.arrayToJson(JSON.parse(game.board));
+
+         console.log('game loaded:');
+         console.log(game);
+
+         // TODO, load game board into the gameBoard array representing state of each card
+        var rows = game.board.length,
+        	count = 0; 
+        for(var y = 0; y < rows; y+=1) {
+        	var columns = game.board[y].length;
+        	for(var x = 0; x < columns; x+=1) {
+        		var boardSpace = game.board[y][x];
+        		// free space
+        		if(!boardSpace.hasChip) {
+        			gameBoard[count] = BACKGROUNDCOLORS.FREE;
+        		}
+        		// logged user owns this space
+        		else if(boardSpace.owner === localStorage.id) {
+        			if(boardSpace.sequence) {
+        				gameBoard[count] = BACKGROUNDCOLORS.YOURSEQ;
+        			} else {
+        				gameBoard[count] = BACKGROUNDCOLORS.YOURS;
+        			}
+        		} 
+        		// other player owns this space
+        		else {
+        			if(boardSpace.sequence) {
+        				gameBoard[count] = BACKGROUNDCOLORS.THEIRSEQ;
+        			} else {
+        				gameBoard[count] = BACKGROUNDCOLORS.THEIRS;
+        			}
+        		}
+
+        		count+=1;
+        	}
+        }
+
+        // if its player 2's turn and logged player is player two or player 1's turn and logged player is player one
+        if( (game.turn === "1" && game.player2_id === localStorage.id) || (game.turn === "0" && game.player1_id === localStorage.id) ) {
+        	$(document).on('click', '#gameBoard > .playingCard', boardListener);
+        	$(document).on('click', '#yourHand > .playingCard', handListener);
+        } else {
+        	$('#board > .container').prepend('<div class="alert alert-info">It is still the other players turn.</div>');
+        }
+	});
 	
 	// Give the user feedback if the game tried to do something it couldn't
 	var showError = function(msg) {
 		$('#error').html(msg).show();
 		setTimeout(function() { $('#error').fadeOut('slow'); }, 1000);
+	};
+
+	// Clear all green from the game board and hand
+	var clear = function() {
+
+		console.log('clearing board');
+		$("#gameBoard > .playingCard .front").each(function(index) {
+			if($(this).css('background-color') === "rgb(153, 255, 153)") {
+				$(this).css('background-color', '#FFF');
+			}
+		});
+
+		$('#yourHand > .playingCard').each(function(index) {
+			$('.front', this).css('background-color', '#FFF');
+		});
 	};
 	
 	// Display the cards in the player's hand by using the hand array to generate card html
@@ -128,21 +184,11 @@ function drawBoard(websocket) {
 		hand.splice(hand.length, 0, c);
 		showHand();
 	};
-	
-	// Draw 6 cards to fill the player's hand
-	doDrawCard();
-	doDrawCard();
-	doDrawCard();
-	doDrawCard();
-	doDrawCard();
-	doDrawCard();
-	
+
 	// Bind a click listener to cards in a player's hand
 	// This listener toggles the highlighting of cards in a player's hand and on the game board
 	// When a user clicks a card in their hand, it becomes highlighted along with all open spots on the game board that match
-	$(document).on('click', '#yourHand > .playingCard', function(card) {
-
-		console.log("card clicked in your hand");
+	var handListener = function(card) {
 		var classNameOriginal = card.currentTarget.className;
 		var className = "." + classNameOriginal.split(" ").join(".");
 		
@@ -157,23 +203,29 @@ function drawBoard(websocket) {
 				id : $(this).attr("id")
 			};
 		}
-	});
-	
+	}
+
 	// Click method for cards on the game board
 	// If a user clicks a highlighted card on the game board, they will put a chip on that space
 	// Reference: [ rgb(255, 169, 113) ] is the rgb value for the opponent's color
-	$(document).on('click', "#gameBoard > .playingCard", function(card) {
-
-		console.log("game board playing card clicked");
+	var boardListener = function(card) {
 		// if the game board card you clicked on is light green
 		if ($(".front", this).css("background-color") === "rgb(153, 255, 153)") {
 
 			var coords = $(this)[0].children[0].dataset;
-			game.board[coords.y][coords.x].hasChip = true;
-			game.board[coords.y][coords.x].owner = localStorage.id;
-			// console.log('board before updating');
-			// console.log(JSON.stringify(game.board));
-			Db.updateGame(game.id, JSON.stringify(game.board), game.player1_id, game.player2_id, game.total_moves, game.turn);
+			var boardSpace = game.board[coords.y][coords.x];
+			game.board[coords.y][coords.x] = {
+				card: boardSpace.card,
+				hasChip: true,
+				owner: localStorage.id,
+				sequence: boardSpace.sequence
+			};
+			game.total_moves += 1;
+			// flip the turn
+			game.turn = 1 - game.turn;
+			switchTurn();
+			$('#board > .container').prepend('<div class="alert alert-info">It is now other players turn.</div>');
+			clear();
 
 			var classNameOriginal = card.currentTarget.className;
 			var className = "." + classNameOriginal.split(" ").join(".");
@@ -194,25 +246,15 @@ function drawBoard(websocket) {
 			});
 			
 			$(" .front", this).css("background-color", "rgb(92, 133, 255)");
-			
 			$(" .front", this).addClass('occupied');
+
+			// save game state
+			Db.updateGame(game.id, JSON.stringify(game.board), game.player1_id, game.player2_id, game.total_moves, game.turn);
 		}
-		
-		// Store board state
-		$("#gameBoard > .playingCard .front").each(function(index) {
-			if ("rgb(92, 133, 255)" === $(this).css("background-color")) {
-				gameBoard[index] = BACKGROUNDCOLORS.YOURS;
-			}
-			
-			if ("rgb(255, 169, 113)" === $(this).css("background-color")) {
-				gameBoard[index] = BACKGROUNDCOLORS.THEIRS;
-			} else if ("rgb(255, 255, 255)" === $(this).css("background-color")) {
-				gameBoard[index] = BACKGROUNDCOLORS.FREE;
-			}
-		});
 		
 		// Check for sequences
 		var numSequence = 0;
+		console.log('checking for sequences');
 		for (var i = 0; i < gameBoard.length; i++) {
 			
 			if (gameBoard[i] === BACKGROUNDCOLORS.YOURS) {
@@ -222,6 +264,7 @@ function drawBoard(websocket) {
 							(gameBoard[i + 2] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 2] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 3] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 3] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 4] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 4] === BACKGROUNDCOLORS.YOURS)) {
+						console.log('found horizontal sequence');
 						gameBoard[i] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 1] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 2] = BACKGROUNDCOLORS.YOURSEQ;
@@ -236,6 +279,7 @@ function drawBoard(websocket) {
 								(gameBoard[i + 26] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 26] === BACKGROUNDCOLORS.YOURSEQ) &&
 								(gameBoard[i + 39] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 39] === BACKGROUNDCOLORS.YOURSEQ) &&
 								(gameBoard[i + 52] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 52] === BACKGROUNDCOLORS.YOURSEQ)) {
+							console.log('found diagonal sequence down/right');
 							gameBoard[i] = BACKGROUNDCOLORS.YOURSEQ;
 							gameBoard[i + 13] = BACKGROUNDCOLORS.YOURSEQ;
 							gameBoard[i + 26] = BACKGROUNDCOLORS.YOURSEQ;
@@ -251,6 +295,7 @@ function drawBoard(websocket) {
 							(gameBoard[i + 22] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 22] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 33] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 33] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 44] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 44] === BACKGROUNDCOLORS.YOURSEQ)) {
+						console.log('found diagonal sequence down/left');
 						gameBoard[i] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 11] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 22] = BACKGROUNDCOLORS.YOURSEQ;
@@ -265,6 +310,7 @@ function drawBoard(websocket) {
 							(gameBoard[i + 24] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 24] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 36] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 36] === BACKGROUNDCOLORS.YOURSEQ) &&
 							(gameBoard[i + 48] === BACKGROUNDCOLORS.YOURS || gameBoard[i + 48] === BACKGROUNDCOLORS.YOURSEQ)) {
+						console.log('found down sequence');
 						gameBoard[i] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 12] = BACKGROUNDCOLORS.YOURSEQ;
 						gameBoard[i + 24] = BACKGROUNDCOLORS.YOURSEQ;
@@ -277,7 +323,46 @@ function drawBoard(websocket) {
 			yourScore = numSequence;
 			$("#yourScore").html(yourScore);
 		}
-	});
+
+		var changeState = false;
+		// Store board state
+		$("#gameBoard > .playingCard .front").each(function(index) {
+
+			var coords = $(this)[0].dataset;
+			if (gameBoard[index] === BACKGROUNDCOLORS.YOURSEQ) {
+				$(this).css('background-color', 'rgb(82, 133, 255)');
+				if(game.board[coords.y][coords.x].sequence !== true) {
+					game.board[coords.y][coords.x].sequence = true;
+					changeState = true;
+				}
+			} else if(gameBoard[index] === BACKGROUNDCOLORS.THEIRSEQ) {
+				$(this).css('background-color', 'rgb(245, 169, 113)');
+				if(game.board[coords.y][coords.x].sequence !== true) {
+					game.board[coords.y][coords.x].sequence = true;
+					changeState = true;
+				}
+			} 
+		});
+		if(changeState) {
+			console.log('updating game board with board data:');
+			console.log(game.board);
+			Db.updateGame(game.id, JSON.stringify(game.board), game.player1_id, game.player2_id, game.total_moves, game.turn);
+		}
+	}
+
+	var switchTurn = function() {
+		// unbind the hand and board listeners
+		$(document).on('click', '#gameBoard > .playingCard', boardListener);
+		$(document).on('click', '#yourHand > .playingCard', handListener);
+	}
+	
+	// Draw 6 cards to fill the player's hand
+	doDrawCard();
+	doDrawCard();
+	doDrawCard();
+	doDrawCard();
+	doDrawCard();
+	doDrawCard();
 	
 	// Chat
 	$("#send").click(function () {

@@ -10,8 +10,9 @@
     private $hasChip;
     // player id of the owner of this board space
     private $owner;
+    private $sequence;
     
-    public function __construct($card, $hasChip = null, $owner = null) {
+    public function __construct($card, $hasChip = null, $owner = null, $sequence = false) {
 
       if(!is_null($hasChip))
         $this->hasChip = $hasChip;
@@ -23,6 +24,7 @@
       else
         $this->owner = false;
 
+      $this->sequence = $sequence;
       $this->card = $card;
     } 
 
@@ -66,13 +68,14 @@
       return json_encode(array(
         'card' => $this->card,
         'hasChip' => $this->hasChip,
-        'owner' => $this->owner
+        'owner' => $this->owner,
+        'sequence' => $this->sequence
       ));
     }
     
     public static function unserialize($obj) 
     {
-      return new BoardSpace($obj->card, $obj->hasChip, $obj->owner);
+      return new BoardSpace($obj->card, $obj->hasChip, $obj->owner, $obj->sequence);
     }
   }
   

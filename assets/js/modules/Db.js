@@ -37,8 +37,6 @@ var Db = (function() {
 	};
 
 	var makeGame = function(player1, player2, totalMoves, turn) {
-		console.log("creating a game with totalMoves : " + totalMoves);
-		console.log("creating a game with turn : " + turn);
 
 		return $.ajax({
 			url: CONFIG.Dir + 'php/scripts/addgame.php',
@@ -53,7 +51,7 @@ var Db = (function() {
 	 * @param {2d array} board represents 12 x 8 BoardSpace Objects (card value, hasChip, chipColor)
 	 */
 	var updateGame = function(id, board, player1, player2, totalMoves, turn) {
-		console.log("updating game...");
+
 		return $.ajax({
 			url: CONFIG.Dir + 'php/scripts/updategame.php',
 			type: 'POST',
