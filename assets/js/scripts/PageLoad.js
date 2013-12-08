@@ -1,8 +1,6 @@
 $(document).ready(function() {
-	$('#new').on('click', function(event) {
 
-		// if websocket connection is still open close it
-		// Connection.remove();
+	$('#new').on('click', function(event) {
 
 		// unset gameID client side session
 		Session.destroy({
@@ -10,6 +8,9 @@ $(document).ready(function() {
 			id: false,
 			gameId: true
 		});
+
+		// if websocket connection is still open close it
+		Connection.remove();
 
 		$("#board").html('');
 		$.ajax({
@@ -24,15 +25,15 @@ $(document).ready(function() {
 
 	$('#current').on('click', function(event) {
 
-		// if websocket connection is still open close it
-		// Connection.remove();
-
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
 			gameId: true
 		});
+
+		// if websocket connection is still open close it
+		Connection.remove();
 
 		$("#board").html('');
 		$.ajax({
@@ -47,15 +48,15 @@ $(document).ready(function() {
 
 	$('#highScores').on('click', function(event) {
 
-		// if websocket connection is still open close it
-		// Connection.remove();
-
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
 			gameId: true
 		});
+
+		// if websocket connection is still open close it
+		Connection.remove();
 
 		$("#board").html('');
 		$.ajax({
@@ -70,15 +71,15 @@ $(document).ready(function() {
 
 	$('#help').on('click', function(event) {
 
-		// if websocket connection is still open close it
-		// Connection.remove();
-
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
 			gameId: true
 		});
+
+		// if websocket connection is still open close it
+		Connection.remove();
 
 		$("#board").html('');
 		$.ajax({
@@ -93,15 +94,15 @@ $(document).ready(function() {
 
 	$('#settings').on('click', function(event) {
 
-		// if websocket connection is still open close it
-		// Connection.remove();
-
 		// unset gameID client side session
 		Session.destroy({
 			gamertag: false,
 			id: false,
 			gameId: true
 		});
+
+		// if websocket connection is still open close it
+		Connection.remove();
 
 		$("#board").html('');
 		$.ajax({
@@ -135,7 +136,7 @@ $(document).ready(function() {
 			url: './gameboard.php',
 			type: 'POST',
 			data: {id : gameId}
-		}).done(function(html) {
+		}).done(function(html, websocket) {
 			$("#board").html(html);
 			
 			// set client side session to show that your currently in a board game view
@@ -148,3 +149,4 @@ $(document).ready(function() {
 		});
 	});
 });
+

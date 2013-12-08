@@ -18,41 +18,73 @@ class GameServer extends WebSocketServer {
                 // message hit on the server should only be sent to the other player connected to the game
                 $message = json_decode($message);
                 error_log('');
-                error_log('message receieved : ' . $message->message);
+                // error_log('message receieved : ' . $message->message);
                 error_log('message type : ' . $message->type);
                 // error_log('sent from user : ' . $message->user);
                 error_log('sent from user : ' . $user->player->id);
                 error_log('sent from game : ' . $message->game);
                 error_log('each player in game : ');
-                foreach($user->currentGame->players as $player) 
-                {
-                        error_log('---- id : ' . $player->player->id);
+                if($user->currentGame->players) {
+                        foreach($user->currentGame->players as $player) 
+                        {
+                                error_log('---- id : ' . $player->player->id);
+                        }
                 }
 
                 // look to see if this game exists
-                // foreach($this->games as $game) 
-                // {
-                //         if($game->game->id === $message->game) 
-                //         {       
-                //                 error_log('found game');
+                if($message->type == 'chat' || $message->type == 'move') {
+                        foreach($this->games as $game) 
+                        {
+                                if($game->game->id === $message->game) 
+                                {       
+                                        error_log('found game');
 
-                //                 // send the message to the other player
-                //                 foreach ($game->players as $player) 
-                //                 {
-                //                        if($player->player->id) 
-                //                        {        
-                //                                 error_log('found other player in game');
-                //                                 error_log('other player id : ' . $player->player->id);
-                //                                 $this->send($player, $message);
-                                                
-                //                                 // log the chat in the db
-                //                                 // $dbMessage = new Message();
-                //                                 // $dbMessage->push();
-                //                                 break;
-                //                        }
-                //                 }
-                //         }
-                // }
+                                        foreach ($game->players as $player) 
+                                        {
+                                               if($player->player->id != $user->player->id) 
+                                               {        
+                                                        error_log('found other player in game');
+                                                        error_log('other player id : ' . $player->player->id);
+                                                        $this->send($player, json_encode($message));
+                                                        
+                                                        // log the chat in the db
+                                                        // if($message->type == 'chat') {}
+                                                        // $dbMessage = new Message();
+                                                        // $dbMessage->push();
+                                                        // }
+                                                        break;
+                                               }
+                                        }
+                                }
+                        }
+                }
+                else if($message->type == 'disconnect')
+                {       
+                        // user should be removed from games hes currently in
+                        if($this->games) {
+                                foreach($this->games as $gameKey => $game)
+                                {
+                                        if($game->game->id == $user->currentGame->game->id)
+                                        {
+                                                if($game->players) {
+                                                        foreach($game->players as $playerKey => $player)
+                                                        {
+                                                                if($player->player->id == $user->player->id)
+                                                                {
+                                                                        error_log('removing player from active games');
+                                                                        unset($this->games[$gameKey]->players[$playerKey]);
+                                                                        $user->currentGame = null;
+
+                                                                        print_r($this->games[$gameKey]->players);
+                                                                        break;
+                                                                }
+                                                        }
+                                                }       
+                                        }
+                                }
+                        }
+                }
+
                 error_log('');
         }
         

@@ -179,23 +179,35 @@ abstract class WebSocketServer {
                             $user->setPlayer($player);
                             // $user->setCurrentGame(new WebSocketGame($game));
 
-                            foreach($this->games as $activeGame)
+                            foreach($this->games as $gameKey => $activeGame)
                             {
                                 if($activeGame->game->id == $game->id)
                                 {
-                                    $user->setCurrentGame($activeGame);
+                                    error_log('found a game already created when connecting user');
+                                    array_push($this->games[$gameKey]->players, $user);
+                                    $user->setCurrentGame($this->games[$gameKey]);
                                     $gamefound = true;
+
+                                    error_log('players in game');
+                                    foreach($this->games[$gameKey]->players as $player) {
+                                        error_log('----  id : ' . $player->player->id);
+                                    }
                                     break;
                                 }
                             }
 
                             if(!$gamefound)
                             {
+                                error_log('creating a new game for connecting user');
+
                                 $webSocketGame = new WebSocketGame($game);
+                                array_push($webSocketGame->players, $user);
                                 $user->setCurrentGame($webSocketGame);
 
                                 // add game to list
                                 array_push($this->games, $webSocketGame);
+
+                                // print_r($webSocketGame->players);
                             }
                         }
                         else 

@@ -11,8 +11,12 @@ var Connection = (function() {
 		if(connection) {
 
 			console.log("connection is still open. closing...");
-			connection.close();
-			connection = undefined;
+			connection.send(JSON.stringify({
+				message: '',
+				type: 'disconnect',
+				user: localStorage.id,
+				game: localStorage.gameId
+			}));
 		}
 	};
 

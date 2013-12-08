@@ -1,5 +1,3 @@
-// $(document).ready(function() {
-
 function loadGameBoard() {
 	// initialize web sockets
 
@@ -14,6 +12,7 @@ function loadGameBoard() {
 		console.log('successfully opened web sockets connection');
 
 		drawBoard(websocket);
+		Connection.set(websocket);
 	}
 
 	websocket.onclose = function(event) {
@@ -24,7 +23,20 @@ function loadGameBoard() {
 
 	websocket.onmessage = function(event) {
 		console.log('message recieved from web socket server');
-		console.log(event);
+		// console.log(event);
+
+		var data = JSON.parse(event.data);
+		console.log(data);
+
+		if(data.type === 'chat') {
+			// log chat message to the screen 
+			var d = new Date();
+
+			$("#chatbox").append('<div><span style="color: black;">' + d.getInfo() + ' Opp</span> <span style="color: rgb(255, 169, 113);">' + data.message + '</span></div>');
+			$("#chatbox").stop().animate({
+				scrollTop: $("#chatbox")[0].scrollHeight
+			}, 800);
+		}
 	}
 
 	websocket.onerror = function(event) {
@@ -32,6 +44,8 @@ function loadGameBoard() {
 
 		$('#board > .container').html('<div class="alert alert-danger">Could not connect to Web Sockets server.</div>');
 	}
+
+	return websocket;
 }
 
 function drawBoard(websocket) {
