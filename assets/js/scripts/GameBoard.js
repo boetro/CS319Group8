@@ -89,13 +89,40 @@ function drawBoard(websocket) {
 	var clickedCard = {};
 	
 	gamePromise.done(function(data) {
-		 game = JSON.parse(data);
-         game.board = Util.arrayToJson(JSON.parse(game.board));
+		game = JSON.parse(data);
+        game.board = Util.arrayToJson(JSON.parse(game.board));
 
-         console.log('game loaded:');
-         console.log(game);
+        console.log('game loaded:');
+        console.log(game);
 
-         // TODO, load game board into the gameBoard array representing state of each card
+        if(game.chat_log) {
+
+
+	        // sort the chat messages by date
+	        game.chat_log.sort(function(a,b) {
+				if (a.created_at < b.created_at)
+					return -1;
+				if (a.created_at > b.created_at)
+					return 1;
+				return 0;
+	        });
+	        console.log(game.chat_log);
+
+	        // print the chat messages to the screen
+	        var numMessages = game.chat_log.length;
+	        for(var i = 0; i < numMessages; i+=1) {
+	        	if(game.chat_log[i].sender_id === localStorage.id) {
+	        		$("#chatbox").append('<div><span style="color: black;">' + game.chat_log[i].created_at + ' You</span> <span style="color: rgb(92, 133, 255);">' + game.chat_log[i].message + '</span></div>');
+	        	} else { 
+			    	$("#chatbox").append('<div><span style="color: black;">' + game.chat_log[i].created_at + ' Opp</span> <span style="color: rgb(255, 169, 113);">' + game.chat_log[i].message + '</span></div>');
+	       		}
+	        }
+
+	        $("#chatbox").stop().animate({
+				scrollTop: $("#chatbox")[0].scrollHeight
+			}, 800);
+        }
+
         var rows = game.board.length,
         	count = 0; 
         for(var y = 0; y < rows; y+=1) {
@@ -397,12 +424,13 @@ function drawBoard(websocket) {
 		websocket.send(JSON.stringify({
 			message: message,
 			type: 'chat',
+			time: d.getInfo(),
 			user: localStorage.id,
 			game: localStorage.gameId
 		}));
 	});
 	
 	Date.prototype.getInfo = function() {
-		return this.getMonth() + '/' + this.getDate() + '/' + this.getFullYear() + ' ' + this.getHours() + ':' + this.getMinutes();
+		return this.getFullYear() + '-' + this.getMonth() + '-' + this.getDate() + ' ' + this.getHours() + ':' + this.getMinutes() + ':' + this.getSeconds();
 	};
 }
