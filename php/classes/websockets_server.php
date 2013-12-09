@@ -39,6 +39,14 @@ class GameServer extends WebSocketServer {
                                 {       
                                         error_log('found game');
 
+                                        //log the chat in the db
+                                        if($message->type == 'chat') {
+                                            error_log('sending messeage ' . $message->message);
+                                            $dbMessage = new Message($message->user, $message->message, $message->game);
+                                            $dbMessage->push();
+                                            error_log('message sent');
+                                        }
+
                                         foreach ($game->players as $player) 
                                         {
                                                if($player->player->id != $user->player->id) 
@@ -47,11 +55,6 @@ class GameServer extends WebSocketServer {
                                                         error_log('other player id : ' . $player->player->id);
                                                         $this->send($player, json_encode($message));
                                                         
-                                                        // log the chat in the db
-                                                        // if($message->type == 'chat') {}
-                                                        // $dbMessage = new Message();
-                                                        // $dbMessage->push();
-                                                        // }
                                                         break;
                                                }
                                         }

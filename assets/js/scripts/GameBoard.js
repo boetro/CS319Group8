@@ -386,12 +386,11 @@ function drawBoard(websocket) {
 		timestamps[timestamps.length] = d.getInfo() + ' You:';
 		var message = $('#message').val();
 		chats[chats.length] = message;
-		$("#chatbox").append('<div><span style="color: black;">' + timestamps[timestamps.length - 1] + '</span> <span style="color: rgb(92, 133, 255);">' + chats[chats.length - 1] + '</span></div>');
+		$("#chatbox").append('<div><span style="color: rgb(92, 133, 255);">You: ' + chats[chats.length - 1] + '</span></div>');
 		$("#message").val('');
 		$("#chatbox").stop().animate({
 				scrollTop: $("#chatbox")[0].scrollHeight
 			}, 800);
-		//$("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
 
 		console.log('sent a chat message');
 		console.log(message);

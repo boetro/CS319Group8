@@ -149,6 +149,13 @@ $(document).ready(function() {
 			// wait to load game board.js 
 			loadGameBoard();
 		});
+		$.ajax({
+			url: './php/scripts/load_chat.php',
+			type: 'POST',
+			data: {id : gameId}
+		}).done(function(html) {
+			$("#chatbox").html(html);
+		});
 	});
 });
 

@@ -212,7 +212,7 @@ abstract class WebSocketServer {
                         }
                         else 
                         {
-                            throw new Exception("Not valid game or player."); 
+                            throw new Exception("Not valid game or player. " . $settings[0] . " " . $settings[1]); 
                         }    
                 } else {
                         // todo: fail the connection
